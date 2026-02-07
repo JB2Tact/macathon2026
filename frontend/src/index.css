@@ -1,0 +1,92 @@
+:root {
+  /* Primary Colors */
+  --white: #FFFFFF;
+  --black: #0A0A0A;
+  --green: #00C853;
+
+  /* Secondary Colors */
+  --off-white: #F5F5F5;
+  --soft-black: #1A1A1A;
+  --green-light: #00E676;
+  --green-dark: #00A843;
+
+  /* Neutral Grays */
+  --charcoal: #333333;
+  --gray: #666666;
+  --gray-light: #999999;
+  --border: #E0E0E0;
+
+  /* Semantic Colors */
+  --success: #00C853;
+  --error: #FF5252;
+  --warning: #FFB300;
+  --info: #2196F3;
+
+  /* Design Principles */
+  --radius: 8px;
+  --shadow-subtle: 0 2px 4px rgba(0,0,0,0.05);
+  --grid: 8px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--white);
+  color: var(--black);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+code, .mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+a {
+  color: var(--green);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--green-light);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
