@@ -1,65 +1,187 @@
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Search, Zap } from 'lucide-react';
+import { Card } from '../common/Card';
+import { Button } from '../common/Button';
 
 interface QuickSendWidgetProps {
-    onAnalyze: (text: string) => void;
-    loading: boolean;
+  onAnalyze: (text: string) => void;
+  loading: boolean;
 }
 
+const countries = [
+  'Mexico', 'India', 'Philippines', 'Nigeria', 'Egypt',
+  'Brazil', 'Colombia', 'Pakistan', 'Bangladesh', 'Kenya',
+];
+
 export function QuickSendWidget({ onAnalyze, loading }: QuickSendWidgetProps) {
-    const [input, setInput] = useState('');
+  const [amount, setAmount] = useState('');
+  const [recipient, setRecipient] = useState('');
+  const [country, setCountry] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (input.trim()) onAnalyze(input);
-    };
+  const canSubmit = amount && parseFloat(amount) > 0 && recipient.trim() && country;
 
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="max-w-3xl mx-auto -mt-10 relative z-10"
+  const handleSubmit = () => {
+    if (!canSubmit) return;
+    const text = `Send $${amount} to ${recipient.trim()} in ${country}`;
+    onAnalyze(text);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <Card
+        style={{
+          maxWidth: '560px',
+          margin: '0 auto',
+          padding: '28px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+          <div
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '10px',
+              background: '#00C85315',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '18px',
+            }}
+          >
+            &#9889;
+          </div>
+          <h2 style={{ fontSize: '17px', fontWeight: 600, color: '#0A0A0A' }}>
+            Quick Send
+          </h2>
+        </div>
+
+        {/* Amount */}
+        <div style={{ marginBottom: '14px' }}>
+          <label style={labelStyle}>Amount (USD)</label>
+          <div style={{ position: 'relative' }}>
+            <span
+              style={{
+                position: 'absolute',
+                left: '14px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                fontSize: '18px',
+                fontWeight: 600,
+                color: '#666666',
+              }}
+            >
+              $
+            </span>
+            <input
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="0.00"
+              min="0"
+              step="0.01"
+              style={{
+                ...inputStyle,
+                paddingLeft: '32px',
+                fontSize: '18px',
+                fontWeight: 600,
+                fontFamily: 'JetBrains Mono, monospace',
+              }}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              disabled={loading}
+            />
+          </div>
+        </div>
+
+        {/* Recipient */}
+        <div style={{ marginBottom: '14px' }}>
+          <label style={labelStyle}>Recipient Name</label>
+          <input
+            type="text"
+            value={recipient}
+            onChange={(e) => setRecipient(e.target.value)}
+            placeholder="e.g. Maria, Ahmed"
+            style={inputStyle}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            disabled={loading}
+          />
+        </div>
+
+        {/* Country */}
+        <div style={{ marginBottom: '20px' }}>
+          <label style={labelStyle}>Destination Country</label>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {countries.map((c) => (
+              <button
+                key={c}
+                onClick={() => setCountry(c)}
+                disabled={loading}
+                style={{
+                  padding: '7px 14px',
+                  borderRadius: '20px',
+                  border: country === c ? '1.5px solid #00C853' : '1px solid #E0E0E0',
+                  background: country === c ? '#00C85310' : '#FFFFFF',
+                  color: country === c ? '#00C853' : '#666666',
+                  fontSize: '13px',
+                  fontWeight: country === c ? 600 : 400,
+                  cursor: 'pointer',
+                  fontFamily: 'Inter, sans-serif',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <Button
+          onClick={handleSubmit}
+          loading={loading}
+          disabled={!canSubmit}
+          size="lg"
         >
-            <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 shadow-2xl backdrop-blur-xl">
-                <div className="flex items-center gap-2 mb-4">
-                    <div className="bg-emerald-500/10 p-2 rounded-lg">
-                        <Zap className="w-5 h-5 text-emerald-500" />
-                    </div>
-                    <h2 className="text-lg font-semibold text-white">Quick Send</h2>
-                </div>
+          {loading ? 'Finding Best Route...' : 'Find Best Route'}
+        </Button>
+      </Card>
+    </motion.div>
+  );
+}
 
-                <form onSubmit={handleSubmit} className="relative">
-                    <input
-                        type="text"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        placeholder="e.g., Send 200 USDC to India via Stellar"
-                        className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-32 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all font-mono"
-                        disabled={loading}
-                    />
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+const labelStyle: React.CSSProperties = {
+  display: 'block',
+  fontSize: '12px',
+  fontWeight: 500,
+  color: '#999999',
+  marginBottom: '6px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.5px',
+};
 
-                    <button
-                        type="submit"
-                        disabled={loading || !input.trim()}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-4 py-2 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {loading ? 'Analyzing...' : (
-                            <>
-                                Find Route <ArrowRight className="w-4 h-4" />
-                            </>
-                        )}
-                    </button>
-                </form>
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  padding: '12px 14px',
+  borderRadius: '10px',
+  border: '1.5px solid #E0E0E0',
+  fontSize: '15px',
+  fontFamily: 'Inter, sans-serif',
+  outline: 'none',
+  transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+  background: '#FFFFFF',
+  color: '#0A0A0A',
+};
 
-                <div className="mt-4 flex gap-3 text-sm text-gray-400">
-                    <span className="px-3 py-1 bg-white/5 rounded-full border border-white/5">Example:</span>
-                    <button onClick={() => setInput("Send $500 to detailed-address-123")} className="hover:text-emerald-400 transition-colors">"Send $500 to detailed-address..."</button>
-                </div>
-            </div>
-        </motion.div>
-    );
+function handleFocus(e: React.FocusEvent<HTMLInputElement>) {
+  e.target.style.borderColor = '#00C853';
+  e.target.style.boxShadow = '0 0 0 3px rgba(0,200,83,0.1)';
+}
+
+function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
+  e.target.style.borderColor = '#E0E0E0';
+  e.target.style.boxShadow = 'none';
 }

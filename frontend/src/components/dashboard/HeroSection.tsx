@@ -1,33 +1,64 @@
-
 import { motion } from 'framer-motion';
-import { FadeInWhenVisible } from '../common/FadeInWhenVisible';
+import { Button } from '../common/Button';
 
-export function HeroSection() {
-    return (
-        <section className="relative py-20 overflow-hidden">
-            <div className="absolute inset-0 bg-grid-slate-900/[0.04] bg-[bottom_1px_center] dark:bg-grid-slate-400/[0.05] [mask-image:linear-gradient(0deg,transparent,black)] pointer-events-none" />
+interface HeroSectionProps {
+  onSendMoney: () => void;
+  onViewHistory: () => void;
+}
 
-            <div className="container relative mx-auto px-4 text-center">
-                <FadeInWhenVisible>
-                    <motion.h1
-                        className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-6"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                        Send Money Globally <br />
-                        <span className="text-emerald-500">Instantly & Intelligently</span>
-                    </motion.h1>
-                </FadeInWhenVisible>
+export function HeroSection({ onSendMoney, onViewHistory }: HeroSectionProps) {
+  return (
+    <section style={{ textAlign: 'center', padding: '48px 0 40px' }}>
+      <motion.h1
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          fontSize: '40px',
+          fontWeight: 700,
+          color: '#0A0A0A',
+          lineHeight: 1.2,
+          marginBottom: '16px',
+        }}
+      >
+        Send money globally,
+        <br />
+        <span style={{ color: '#00C853' }}>instantly & intelligently.</span>
+      </motion.h1>
 
-                <FadeInWhenVisible delay={0.2}>
-                    <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-                        AI-powered routing that automatically finds the cheapest and fastest path for your crypto transfers. Secure, transparent, and built for speed.
-                    </p>
-                </FadeInWhenVisible>
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          fontSize: '17px',
+          color: '#666666',
+          maxWidth: '520px',
+          margin: '0 auto 32px',
+          lineHeight: 1.6,
+        }}
+      >
+        AI-powered routing finds the cheapest, fastest blockchain path for
+        your crypto transfers. Secure, transparent, and built for speed.
+      </motion.p>
 
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-emerald-500/20 blur-[120px] rounded-full -z-10 pointer-events-none" />
-            </div>
-        </section>
-    );
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          display: 'flex',
+          gap: '12px',
+          justifyContent: 'center',
+        }}
+      >
+        <Button variant="primary" size="lg" onClick={onSendMoney} style={{ width: 'auto' }}>
+          Send Money
+        </Button>
+        <Button variant="secondary" size="md" onClick={onViewHistory} style={{ width: 'auto' }}>
+          View History
+        </Button>
+      </motion.div>
+    </section>
+  );
 }

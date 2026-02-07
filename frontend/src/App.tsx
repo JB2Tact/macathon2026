@@ -23,7 +23,7 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
 function PublicRoute({ children }: { children: ReactNode }) {
   const { firebaseUser, loading } = useAuth();
   if (loading) return <FullPageSpinner />;
-  if (firebaseUser) return <Navigate to="/send" replace />;
+  if (firebaseUser) return <Navigate to="/dashboard" replace />;
   return <>{children}</>;
 }
 

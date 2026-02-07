@@ -12,6 +12,7 @@ export function Layout({ children }: LayoutProps) {
   const location = useLocation();
 
   const navItems = [
+    { path: '/dashboard', label: 'Home', icon: '⬡' },
     { path: '/send', label: 'Send', icon: '↗' },
     { path: '/connect-bank', label: 'Bank', icon: '◈' },
     { path: '/history', label: 'History', icon: '☰' },
@@ -44,7 +45,7 @@ export function Layout({ children }: LayoutProps) {
         >
           <div
             style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
-            onClick={() => navigate('/send')}
+            onClick={() => navigate('/dashboard')}
           >
             <span style={{ fontSize: '24px', fontWeight: 700, color: '#00C853' }}>⬡</span>
             <span style={{ fontSize: '18px', fontWeight: 700, color: '#0A0A0A' }}>

@@ -7,20 +7,25 @@ interface NaturalLanguageInputProps {
   loading: boolean;
 }
 
-const examples = [
-  'Send $100 to Maria in Mexico',
-  'Transfer 50 USD to Ahmed in Egypt',
-  'Pay $200 to Priya in India',
-  'Send $75 to Carlos in Brazil',
+const countries = [
+  'Mexico', 'India', 'Philippines', 'Nigeria', 'Egypt',
+  'Brazil', 'Colombia', 'Pakistan', 'Bangladesh', 'Kenya',
+  'Vietnam', 'Guatemala', 'Dominican Republic', 'El Salvador', 'Honduras',
 ];
 
+const quickAmounts = [25, 50, 100, 200, 500];
+
 export function NaturalLanguageInput({ onSubmit, loading }: NaturalLanguageInputProps) {
-  const [text, setText] = useState('');
+  const [amount, setAmount] = useState('');
+  const [recipient, setRecipient] = useState('');
+  const [country, setCountry] = useState('');
+
+  const canSubmit = amount && parseFloat(amount) > 0 && recipient.trim() && country;
 
   const handleSubmit = () => {
-    if (text.trim()) {
-      onSubmit(text.trim());
-    }
+    if (!canSubmit) return;
+    const text = `Send $${amount} to ${recipient.trim()} in ${country}`;
+    onSubmit(text);
   };
 
   return (
@@ -29,104 +34,189 @@ export function NaturalLanguageInput({ onSubmit, loading }: NaturalLanguageInput
         <h1 style={{ fontSize: '36px', fontWeight: 700, color: '#0A0A0A', lineHeight: 1.2 }}>
           Send money anywhere,
           <br />
-          <span style={{ color: '#00C853' }}>just say it.</span>
+          <span style={{ color: '#00C853' }}>in seconds.</span>
         </h1>
         <p style={{ color: '#666666', fontSize: '16px', marginTop: '12px' }}>
-          Type a natural language command and AI will find the best blockchain route.
+          Choose amount, recipient, and destination. AI finds the best blockchain route.
         </p>
       </div>
 
       <Card
         glass
         style={{
-          maxWidth: '640px',
+          maxWidth: '580px',
           margin: '0 auto',
           padding: '32px',
         }}
       >
-        <div style={{ position: 'relative' }}>
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSubmit();
-              }
-            }}
-            placeholder='Try "Send $100 to Maria in Mexico"'
-            style={{
-              width: '100%',
-              minHeight: '100px',
-              padding: '16px',
-              borderRadius: '12px',
-              border: '1.5px solid #E0E0E0',
-              fontSize: '17px',
-              fontFamily: 'Inter, sans-serif',
-              resize: 'none',
-              outline: 'none',
-              transition: 'border-color 0.2s ease',
-              background: '#FFFFFF',
-              color: '#0A0A0A',
-              lineHeight: 1.5,
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = '#00C853';
-              e.target.style.boxShadow = '0 0 0 3px rgba(0,200,83,0.1)';
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = '#E0E0E0';
-              e.target.style.boxShadow = 'none';
-            }}
-          />
-        </div>
-
-        <Button
-          onClick={handleSubmit}
-          loading={loading}
-          disabled={!text.trim()}
-          size="lg"
-          style={{ marginTop: '16px' }}
-        >
-          {loading ? 'Analyzing Routes...' : 'Find Best Route →'}
-        </Button>
-
-        {/* Example pills */}
-        <div style={{ marginTop: '20px' }}>
-          <p style={{ fontSize: '12px', color: '#999999', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            Try an example
-          </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-            {examples.map((example) => (
+        {/* Amount */}
+        <div style={{ marginBottom: '20px' }}>
+          <label style={labelStyle}>Amount (USD)</label>
+          <div style={{ position: 'relative' }}>
+            <span
+              style={{
+                position: 'absolute',
+                left: '16px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                fontSize: '24px',
+                fontWeight: 700,
+                color: '#666666',
+              }}
+            >
+              $
+            </span>
+            <input
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="0.00"
+              min="0"
+              step="0.01"
+              style={{
+                ...inputStyle,
+                paddingLeft: '40px',
+                fontSize: '24px',
+                fontWeight: 700,
+                fontFamily: 'JetBrains Mono, monospace',
+                height: '56px',
+              }}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              disabled={loading}
+            />
+          </div>
+          <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+            {quickAmounts.map((qa) => (
               <button
-                key={example}
-                onClick={() => setText(example)}
+                key={qa}
+                onClick={() => setAmount(String(qa))}
+                disabled={loading}
                 style={{
-                  padding: '6px 14px',
-                  borderRadius: '20px',
-                  border: '1px solid #E0E0E0',
-                  background: '#FFFFFF',
-                  color: '#666666',
-                  fontSize: '13px',
+                  flex: 1,
+                  padding: '8px 0',
+                  borderRadius: '8px',
+                  border: amount === String(qa) ? '1.5px solid #00C853' : '1px solid #E0E0E0',
+                  background: amount === String(qa) ? '#00C85310' : '#FFFFFF',
+                  color: amount === String(qa) ? '#00C853' : '#333333',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  fontFamily: 'JetBrains Mono, monospace',
                   cursor: 'pointer',
-                  fontFamily: 'Inter, sans-serif',
-                  transition: 'all 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  (e.target as HTMLButtonElement).style.borderColor = '#00C853';
-                  (e.target as HTMLButtonElement).style.color = '#00C853';
-                }}
-                onMouseLeave={(e) => {
-                  (e.target as HTMLButtonElement).style.borderColor = '#E0E0E0';
-                  (e.target as HTMLButtonElement).style.color = '#666666';
+                  transition: 'all 0.15s ease',
                 }}
               >
-                {example}
+                ${qa}
               </button>
             ))}
           </div>
         </div>
+
+        {/* Recipient */}
+        <div style={{ marginBottom: '20px' }}>
+          <label style={labelStyle}>Recipient Name</label>
+          <input
+            type="text"
+            value={recipient}
+            onChange={(e) => setRecipient(e.target.value)}
+            placeholder="Enter recipient's name"
+            style={inputStyle}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            disabled={loading}
+          />
+        </div>
+
+        {/* Country */}
+        <div style={{ marginBottom: '24px' }}>
+          <label style={labelStyle}>Destination Country</label>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {countries.map((c) => (
+              <button
+                key={c}
+                onClick={() => setCountry(c)}
+                disabled={loading}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  border: country === c ? '1.5px solid #00C853' : '1px solid #E0E0E0',
+                  background: country === c ? '#00C85310' : '#FFFFFF',
+                  color: country === c ? '#00C853' : '#666666',
+                  fontSize: '13px',
+                  fontWeight: country === c ? 600 : 400,
+                  cursor: 'pointer',
+                  fontFamily: 'Inter, sans-serif',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Summary preview */}
+        {canSubmit && (
+          <div
+            style={{
+              background: '#F5F5F5',
+              borderRadius: '10px',
+              padding: '12px 16px',
+              marginBottom: '16px',
+              fontSize: '14px',
+              color: '#333333',
+            }}
+          >
+            Sending{' '}
+            <strong style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00C853' }}>
+              ${parseFloat(amount).toFixed(2)}
+            </strong>{' '}
+            to <strong>{recipient.trim()}</strong> in <strong>{country}</strong>
+          </div>
+        )}
+
+        <Button
+          onClick={handleSubmit}
+          loading={loading}
+          disabled={!canSubmit}
+          size="lg"
+        >
+          {loading ? 'Finding Best Route...' : 'Find Best Route'}
+        </Button>
       </Card>
     </div>
   );
+}
+
+const labelStyle: React.CSSProperties = {
+  display: 'block',
+  fontSize: '12px',
+  fontWeight: 500,
+  color: '#999999',
+  marginBottom: '6px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.5px',
+};
+
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  padding: '12px 14px',
+  borderRadius: '10px',
+  border: '1.5px solid #E0E0E0',
+  fontSize: '15px',
+  fontFamily: 'Inter, sans-serif',
+  outline: 'none',
+  transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+  background: '#FFFFFF',
+  color: '#0A0A0A',
+};
+
+function handleFocus(e: React.FocusEvent<HTMLInputElement>) {
+  e.target.style.borderColor = '#00C853';
+  e.target.style.boxShadow = '0 0 0 3px rgba(0,200,83,0.1)';
+}
+
+function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
+  e.target.style.borderColor = '#E0E0E0';
+  e.target.style.boxShadow = 'none';
 }

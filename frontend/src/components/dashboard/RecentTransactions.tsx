@@ -1,68 +1,201 @@
-
 import { motion } from 'framer-motion';
-import { Clock, CheckCircle2, XCircle, ArrowUpRight } from 'lucide-react';
+import { Card } from '../common/Card';
+import { useTransactions } from '../../hooks/useTransactions';
 
-const MOCK_TRANSACTIONS = [
-    { id: 1, to: 'Maria (Mexico)', amount: '$100.00', status: 'completed', date: '2 mins ago', method: 'Stellar' },
-    { id: 2, to: 'Ahmed (Egypt)', amount: '$50.00', status: 'pending', date: '5 mins ago', method: 'Solana' },
-    { id: 3, to: 'Priya (India)', amount: '$200.00', status: 'failed', date: '1 hour ago', method: 'Ethereum' },
-];
+const chainIcons: Record<string, string> = {
+  stellar: '\u2605',
+  ethereum: '\u25C6',
+  solana: '\u25CE',
+};
 
-export function RecentTransactions() {
+export function RecentTransactions({ onViewAll }: { onViewAll: () => void }) {
+  const { transactions, loading, error } = useTransactions();
+  const recent = transactions.slice(0, 5);
+
+  if (loading) {
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="mt-20 max-w-4xl mx-auto"
-        >
-            <div className="flex justify-between items-center mb-6 px-4">
-                <h3 className="text-xl font-semibold text-white">Recent Activity</h3>
-                <button className="text-sm text-emerald-500 hover:text-emerald-400 transition-colors">View All</button>
-            </div>
-
-            <div className="space-y-3">
-                {MOCK_TRANSACTIONS.map((tx, i) => (
-                    <motion.div
-                        key={tx.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.7 + (i * 0.1) }}
-                        className="group bg-white/5 border border-white/5 hover:border-white/10 rounded-xl p-4 flex items-center justify-between transition-all hover:bg-white/[0.07]"
-                    >
-                        <div className="flex items-center gap-4">
-                            <div className={`p-2 rounded-full ${tx.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' :
-                                    tx.status === 'pending' ? 'bg-amber-500/10 text-amber-500' :
-                                        'bg-red-500/10 text-red-500'
-                                }`}>
-                                {tx.status === 'completed' ? <CheckCircle2 className="w-5 h-5" /> :
-                                    tx.status === 'pending' ? <Clock className="w-5 h-5" /> :
-                                        <XCircle className="w-5 h-5" />}
-                            </div>
-                            <div>
-                                <p className="font-medium text-white">Sent to {tx.to}</p>
-                                <div className="flex items-center gap-2 text-xs text-gray-500">
-                                    <span>{tx.date}</span>
-                                    <span>•</span>
-                                    <span>via {tx.method}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="text-right">
-                            <p className="font-mono font-semibold text-white">{tx.amount}</p>
-                            <span className={`text-xs capitalize ${tx.status === 'completed' ? 'text-emerald-500' :
-                                    tx.status === 'pending' ? 'text-amber-500' :
-                                        'text-red-500'
-                                }`}>{tx.status}</span>
-                        </div>
-
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute right-4 top-1/2 -translate-y-1/2 translate-x-12 group-hover:translate-x-0">
-                            <ArrowUpRight className="w-5 h-5 text-gray-500" />
-                        </div>
-                    </motion.div>
-                ))}
-            </div>
-        </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+        style={{ marginTop: '40px' }}
+      >
+        <h3 style={{ fontSize: '18px', fontWeight: 600, color: '#0A0A0A', marginBottom: '16px' }}>
+          Recent Activity
+        </h3>
+        <Card style={{ textAlign: 'center', padding: '40px' }}>
+          <span
+            style={{
+              width: '24px',
+              height: '24px',
+              border: '3px solid #E0E0E0',
+              borderTopColor: '#00C853',
+              borderRadius: '50%',
+              animation: 'spin 0.7s linear infinite',
+              display: 'inline-block',
+            }}
+          />
+        </Card>
+      </motion.div>
     );
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.6 }}
+      style={{ marginTop: '40px' }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '16px',
+        }}
+      >
+        <h3 style={{ fontSize: '18px', fontWeight: 600, color: '#0A0A0A' }}>
+          Recent Activity
+        </h3>
+        {recent.length > 0 && (
+          <button
+            onClick={onViewAll}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#00C853',
+              fontSize: '14px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              fontFamily: 'Inter, sans-serif',
+            }}
+          >
+            View All
+          </button>
+        )}
+      </div>
+
+      {error && (
+        <Card style={{ textAlign: 'center', padding: '32px' }}>
+          <p style={{ color: '#666666', fontSize: '14px' }}>
+            Could not load transactions.
+          </p>
+        </Card>
+      )}
+
+      {!error && recent.length === 0 && (
+        <Card style={{ textAlign: 'center', padding: '40px' }}>
+          <div style={{ fontSize: '32px', marginBottom: '12px' }}>&#128172;</div>
+          <p style={{ fontSize: '15px', fontWeight: 500, color: '#0A0A0A', marginBottom: '4px' }}>
+            No transactions yet
+          </p>
+          <p style={{ fontSize: '13px', color: '#666666' }}>
+            Send your first transfer and it will appear here.
+          </p>
+        </Card>
+      )}
+
+      {!error && recent.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {recent.map((tx, i) => {
+            const statusColor =
+              tx.status === 'completed' ? '#00C853' :
+              tx.status === 'pending' ? '#FFB300' : '#FF5252';
+            const statusBg =
+              tx.status === 'completed' ? '#00C85315' :
+              tx.status === 'pending' ? '#FFB30015' : '#FF525215';
+            const chain = tx.selectedRoute?.blockchain || tx.routes?.[0]?.blockchain;
+
+            return (
+              <motion.div
+                key={tx.id}
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.7 + i * 0.08 }}
+              >
+                <Card
+                  hoverable
+                  style={{ padding: '16px 20px' }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div
+                        style={{
+                          width: '36px',
+                          height: '36px',
+                          borderRadius: '50%',
+                          background: statusBg,
+                          color: statusColor,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '16px',
+                          fontWeight: 700,
+                        }}
+                      >
+                        {tx.status === 'completed' ? '\u2713' :
+                         tx.status === 'pending' ? '\u25CF' : '\u2717'}
+                      </div>
+                      <div>
+                        <p style={{ fontSize: '14px', fontWeight: 500, color: '#0A0A0A' }}>
+                          {tx.input?.parsedRecipient
+                            ? `Sent to ${tx.input.parsedRecipient}`
+                            : 'Transfer'}
+                          {tx.input?.parsedCountry ? ` (${tx.input.parsedCountry})` : ''}
+                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#999999' }}>
+                          <span>
+                            {new Date(tx.createdAt).toLocaleDateString(undefined, {
+                              month: 'short',
+                              day: 'numeric',
+                            })}
+                          </span>
+                          {chain && (
+                            <>
+                              <span>&#183;</span>
+                              <span>{chainIcons[chain] || ''} {chain}</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ textAlign: 'right' }}>
+                      <p
+                        style={{
+                          fontSize: '15px',
+                          fontWeight: 600,
+                          color: '#0A0A0A',
+                          fontFamily: 'JetBrains Mono, monospace',
+                        }}
+                      >
+                        ${tx.input?.parsedAmount?.toFixed(2) || '0.00'}
+                      </p>
+                      <span
+                        style={{
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          color: statusColor,
+                          textTransform: 'capitalize',
+                        }}
+                      >
+                        {tx.status}
+                      </span>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
+    </motion.div>
+  );
 }
