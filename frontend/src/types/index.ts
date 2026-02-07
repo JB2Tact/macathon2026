@@ -60,3 +60,24 @@ export interface ConfirmRequest {
 export interface ConfirmResponse {
   transaction: Transaction;
 }
+
+// Bank Connection
+export type BankConnectionStatus = 'not_connected' | 'connecting' | 'connected';
+
+export interface BankAccount {
+  id: string;
+  bankName: string;
+  last4: string;
+  status: BankConnectionStatus;
+  connectedAt?: string;
+}
+
+export interface BankLinkResponse {
+  url: string;
+  sessionId: string;
+}
+
+export interface BankStatusResponse {
+  connected: boolean;
+  account?: BankAccount;
+}

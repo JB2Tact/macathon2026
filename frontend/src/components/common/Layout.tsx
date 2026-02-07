@@ -13,6 +13,7 @@ export function Layout({ children }: LayoutProps) {
 
   const navItems = [
     { path: '/send', label: 'Send', icon: '↗' },
+    { path: '/connect-bank', label: 'Bank', icon: '◈' },
     { path: '/history', label: 'History', icon: '☰' },
   ];
 

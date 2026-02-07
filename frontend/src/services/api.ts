@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { auth } from '../config/firebase';
-import type { SendRequest, SendResponse, ConfirmRequest, ConfirmResponse, Transaction } from '../types';
+import type { SendRequest, SendResponse, ConfirmRequest, ConfirmResponse, Transaction, BankLinkResponse, BankStatusResponse } from '../types';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001',
@@ -33,4 +33,20 @@ export async function getTransactions(): Promise<Transaction[]> {
 export async function getTransaction(id: string): Promise<Transaction> {
   const res = await api.get<Transaction>(`/api/transactions/${id}`);
   return res.data;
+}
+
+// Bank Connection
+export async function getBankStatus(sessionId?: string): Promise<BankStatusResponse> {
+  const params = sessionId ? { session_id: sessionId } : {};
+  const res = await api.get<BankStatusResponse>('/api/bank/status', { params });
+  return res.data;
+}
+
+export async function createBankLink(): Promise<BankLinkResponse> {
+  const res = await api.post<BankLinkResponse>('/api/bank/link');
+  return res.data;
+}
+
+export async function disconnectBank(): Promise<void> {
+  await api.post('/api/bank/disconnect');
 }

@@ -4,6 +4,7 @@ import express from 'express';
 import cors from 'cors';
 import { sendAnalyze, sendConfirm } from './handlers/send';
 import { getTransactions, getTransaction } from './handlers/transactions';
+import { bankLink, bankStatus, bankDisconnect } from './handlers/bank';
 
 admin.initializeApp();
 
@@ -40,5 +41,8 @@ app.post('/api/send/analyze', sendAnalyze);
 app.post('/api/send/confirm', sendConfirm);
 app.get('/api/transactions', getTransactions);
 app.get('/api/transactions/:id', getTransaction);
+app.post('/api/bank/link', bankLink);
+app.get('/api/bank/status', bankStatus);
+app.post('/api/bank/disconnect', bankDisconnect);
 
 export const api = functions.https.onRequest(app);

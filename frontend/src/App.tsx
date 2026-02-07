@@ -9,6 +9,7 @@ import { SignupPage } from './pages/SignupPage';
 import { SendPage } from './pages/SendPage';
 import { ResultsPage } from './pages/ResultsPage';
 import { HistoryPage } from './pages/HistoryPage';
+import { ConnectBankPage } from './pages/ConnectBankPage';
 import type { ReactNode } from 'react';
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
@@ -36,6 +37,7 @@ function AppRoutes() {
         <Route path="/send" element={<ProtectedRoute><PageTransition><SendPage /></PageTransition></ProtectedRoute>} />
         <Route path="/results" element={<ProtectedRoute><PageTransition><ResultsPage /></PageTransition></ProtectedRoute>} />
         <Route path="/history" element={<ProtectedRoute><PageTransition><HistoryPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/connect-bank" element={<ProtectedRoute><PageTransition><ConnectBankPage /></PageTransition></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/send" replace />} />
       </Routes>
     </AnimatePresence>
