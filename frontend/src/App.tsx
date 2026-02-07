@@ -10,6 +10,7 @@ import { SendPage } from './pages/SendPage';
 import { ResultsPage } from './pages/ResultsPage';
 import { HistoryPage } from './pages/HistoryPage';
 import { ConnectBankPage } from './pages/ConnectBankPage';
+import { DashboardPage } from './pages/DashboardPage';
 import type { ReactNode } from 'react';
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
@@ -34,11 +35,12 @@ function AppRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/login" element={<PublicRoute><PageTransition><LoginPage /></PageTransition></PublicRoute>} />
         <Route path="/signup" element={<PublicRoute><PageTransition><SignupPage /></PageTransition></PublicRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><PageTransition><DashboardPage /></PageTransition></ProtectedRoute>} />
         <Route path="/send" element={<ProtectedRoute><PageTransition><SendPage /></PageTransition></ProtectedRoute>} />
         <Route path="/results" element={<ProtectedRoute><PageTransition><ResultsPage /></PageTransition></ProtectedRoute>} />
         <Route path="/history" element={<ProtectedRoute><PageTransition><HistoryPage /></PageTransition></ProtectedRoute>} />
         <Route path="/connect-bank" element={<ProtectedRoute><PageTransition><ConnectBankPage /></PageTransition></ProtectedRoute>} />
-        <Route path="*" element={<Navigate to="/send" replace />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </AnimatePresence>
   );
