@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '../common/Card';
 import { Button } from '../common/Button';
+import { ContactSelector } from '../contacts/ContactSelector';
+import type { Contact } from '../../types';
 
 interface QuickSendWidgetProps {
   onAnalyze: (text: string) => void;
@@ -17,12 +19,23 @@ export function QuickSendWidget({ onAnalyze, loading }: QuickSendWidgetProps) {
   const [amount, setAmount] = useState('');
   const [recipient, setRecipient] = useState('');
   const [country, setCountry] = useState('');
+  const [walletAddress, setWalletAddress] = useState('');
+  const [network, setNetwork] = useState('');
+
+  const handleContactSelect = (contact: Contact) => {
+    setRecipient(contact.name);
+    setCountry(contact.country);
+    setWalletAddress(contact.walletAddress);
+    setNetwork(contact.network);
+  };
 
   const canSubmit = amount && parseFloat(amount) > 0 && recipient.trim() && country;
 
   const handleSubmit = () => {
     if (!canSubmit) return;
-    const text = `Send $${amount} to ${recipient.trim()} in ${country}`;
+    let text = `Send $${amount} to ${recipient.trim()} in ${country}`;
+    if (walletAddress) text += ` at ${walletAddress}`;
+    if (network) text += ` on ${network}`;
     onAnalyze(text);
   };
 
@@ -58,6 +71,9 @@ export function QuickSendWidget({ onAnalyze, loading }: QuickSendWidgetProps) {
             Quick Send
           </h2>
         </div>
+
+        {/* Contact Selector */}
+        <ContactSelector onSelect={handleContactSelect} />
 
         {/* Amount */}
         <div style={{ marginBottom: '14px' }}>
@@ -138,6 +154,42 @@ export function QuickSendWidget({ onAnalyze, loading }: QuickSendWidgetProps) {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Wallet Address */}
+        <div style={{ marginBottom: '20px' }}>
+          <label style={labelStyle}>Wallet Address</label>
+          <input
+            type="text"
+            value={walletAddress}
+            onChange={(e) => setWalletAddress(e.target.value)}
+            placeholder="e.g. GBX4K...or 0x1a2..."
+            style={{
+              ...inputStyle,
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: '13px',
+              letterSpacing: '0.3px',
+            }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            disabled={loading}
+          />
+          {network && (
+            <div
+              style={{
+                display: 'inline-block',
+                marginTop: '8px',
+                padding: '4px 12px',
+                borderRadius: '12px',
+                background: '#00C85310',
+                color: '#00C853',
+                fontSize: '12px',
+                fontWeight: 600,
+              }}
+            >
+              {network}
+            </div>
+          )}
         </div>
 
         <Button

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { auth } from '../config/firebase';
-import type { SendRequest, SendResponse, ConfirmRequest, ConfirmResponse, Transaction, BankLinkResponse, BankStatusResponse } from '../types';
+import type { SendRequest, SendResponse, ConfirmRequest, ConfirmResponse, Transaction, BankLinkResponse, BankStatusResponse, Contact, CreateContactRequest } from '../types';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001',
@@ -49,4 +49,24 @@ export async function createBankLink(): Promise<BankLinkResponse> {
 
 export async function disconnectBank(): Promise<void> {
   await api.post('/api/bank/disconnect');
+}
+
+// Contacts
+export async function getContacts(): Promise<Contact[]> {
+  const res = await api.get<Contact[]>('/api/contacts');
+  return res.data;
+}
+
+export async function createContact(data: CreateContactRequest): Promise<Contact> {
+  const res = await api.post<Contact>('/api/contacts', data);
+  return res.data;
+}
+
+export async function updateContact(id: string, data: Partial<CreateContactRequest>): Promise<Contact> {
+  const res = await api.put<Contact>(`/api/contacts/${id}`, data);
+  return res.data;
+}
+
+export async function deleteContact(id: string): Promise<void> {
+  await api.delete(`/api/contacts/${id}`);
 }

@@ -1,5 +1,6 @@
 import { Card } from '../common/Card';
 import { Button } from '../common/Button';
+import { AnimatedCounter } from '../common/AnimatedCounter';
 import type { Route, Blockchain } from '../../types';
 
 interface RouteCardProps {
@@ -71,7 +72,7 @@ export function RouteCard({ route, recommended, onSelect, loading }: RouteCardPr
         <div>
           <p style={{ fontSize: '12px', color: '#999999', marginBottom: '4px' }}>Estimated Fee</p>
           <p style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace', color: '#0A0A0A' }}>
-            ${route.estimatedFee.toFixed(4)}
+            <AnimatedCounter value={route.estimatedFee} prefix="$" decimals={4} />
           </p>
         </div>
         <div>

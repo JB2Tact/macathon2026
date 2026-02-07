@@ -1,10 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '../common/Card';
 import { Button } from '../common/Button';
+import { ContactSelector } from '../contacts/ContactSelector';
+import type { Contact } from '../../types';
+
+interface Prefill {
+  name: string;
+  country: string;
+  walletAddress: string;
+  network: string;
+}
 
 interface NaturalLanguageInputProps {
   onSubmit: (text: string) => void;
   loading: boolean;
+  prefill?: Prefill;
 }
 
 const countries = [
@@ -15,16 +25,36 @@ const countries = [
 
 const quickAmounts = [25, 50, 100, 200, 500];
 
-export function NaturalLanguageInput({ onSubmit, loading }: NaturalLanguageInputProps) {
+export function NaturalLanguageInput({ onSubmit, loading, prefill }: NaturalLanguageInputProps) {
   const [amount, setAmount] = useState('');
   const [recipient, setRecipient] = useState('');
   const [country, setCountry] = useState('');
+  const [walletAddress, setWalletAddress] = useState('');
+  const [network, setNetwork] = useState('');
+
+  useEffect(() => {
+    if (prefill) {
+      if (prefill.name) setRecipient(prefill.name);
+      if (prefill.country) setCountry(prefill.country);
+      if (prefill.walletAddress) setWalletAddress(prefill.walletAddress);
+      if (prefill.network) setNetwork(prefill.network);
+    }
+  }, [prefill]);
+
+  const handleContactSelect = (contact: Contact) => {
+    setRecipient(contact.name);
+    setCountry(contact.country);
+    setWalletAddress(contact.walletAddress);
+    setNetwork(contact.network);
+  };
 
   const canSubmit = amount && parseFloat(amount) > 0 && recipient.trim() && country;
 
   const handleSubmit = () => {
     if (!canSubmit) return;
-    const text = `Send $${amount} to ${recipient.trim()} in ${country}`;
+    let text = `Send $${amount} to ${recipient.trim()} in ${country}`;
+    if (walletAddress) text += ` at ${walletAddress}`;
+    if (network) text += ` on ${network}`;
     onSubmit(text);
   };
 
@@ -49,6 +79,9 @@ export function NaturalLanguageInput({ onSubmit, loading }: NaturalLanguageInput
           padding: '32px',
         }}
       >
+        {/* Contact Selector */}
+        <ContactSelector onSelect={handleContactSelect} />
+
         {/* Amount */}
         <div style={{ marginBottom: '20px' }}>
           <label style={labelStyle}>Amount (USD)</label>
@@ -155,6 +188,42 @@ export function NaturalLanguageInput({ onSubmit, loading }: NaturalLanguageInput
           </div>
         </div>
 
+        {/* Wallet Address */}
+        <div style={{ marginBottom: '20px' }}>
+          <label style={labelStyle}>Wallet Address</label>
+          <input
+            type="text"
+            value={walletAddress}
+            onChange={(e) => setWalletAddress(e.target.value)}
+            placeholder="e.g. GBX4K...or 0x1a2..."
+            style={{
+              ...inputStyle,
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: '13px',
+              letterSpacing: '0.3px',
+            }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            disabled={loading}
+          />
+          {network && (
+            <div
+              style={{
+                display: 'inline-block',
+                marginTop: '8px',
+                padding: '4px 12px',
+                borderRadius: '12px',
+                background: '#00C85310',
+                color: '#00C853',
+                fontSize: '12px',
+                fontWeight: 600,
+              }}
+            >
+              {network}
+            </div>
+          )}
+        </div>
+
         {/* Summary preview */}
         {canSubmit && (
           <div
@@ -172,6 +241,15 @@ export function NaturalLanguageInput({ onSubmit, loading }: NaturalLanguageInput
               ${parseFloat(amount).toFixed(2)}
             </strong>{' '}
             to <strong>{recipient.trim()}</strong> in <strong>{country}</strong>
+            {walletAddress && (
+              <>
+                {' '}at{' '}
+                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '12px' }}>
+                  {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+                </span>
+              </>
+            )}
+            {network && <> via <strong>{network}</strong></>}
           </div>
         )}
 

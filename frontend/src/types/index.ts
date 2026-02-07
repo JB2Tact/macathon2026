@@ -81,3 +81,25 @@ export interface BankStatusResponse {
   connected: boolean;
   account?: BankAccount;
 }
+
+// Contacts
+export interface Contact {
+  id: string;
+  userId: string;
+  name: string;
+  country: string;
+  walletAddress: string;
+  network: Blockchain;
+  email?: string;
+  notes?: string;
+  createdAt: string;
+}
+
+export interface CreateContactRequest {
+  name: string;
+  country: string;
+  walletAddress: string;
+  network: Blockchain;
+  email?: string;
+  notes?: string;
+}

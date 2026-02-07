@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Layout } from '../components/common/Layout';
 import { NaturalLanguageInput } from '../components/send/NaturalLanguageInput';
 import { analyzeSend } from '../services/api';
@@ -9,6 +9,17 @@ import toast from 'react-hot-toast';
 export function SendPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Pre-fill from contact if navigated from contacts page
+  const prefill = searchParams.get('name')
+    ? {
+        name: searchParams.get('name') || '',
+        country: searchParams.get('country') || '',
+        walletAddress: searchParams.get('wallet') || '',
+        network: searchParams.get('network') || '',
+      }
+    : undefined;
 
   const handleSend = async (text: string) => {
     try {
@@ -24,7 +35,7 @@ export function SendPage() {
 
   return (
     <Layout>
-      <NaturalLanguageInput onSubmit={handleSend} loading={loading} />
+      <NaturalLanguageInput onSubmit={handleSend} loading={loading} prefill={prefill} />
     </Layout>
   );
 }

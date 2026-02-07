@@ -14,6 +14,7 @@ export function Layout({ children }: LayoutProps) {
   const navItems = [
     { path: '/dashboard', label: 'Home', icon: '⬡' },
     { path: '/send', label: 'Send', icon: '↗' },
+    { path: '/contacts', label: 'Contacts', icon: '◉' },
     { path: '/connect-bank', label: 'Bank', icon: '◈' },
     { path: '/history', label: 'History', icon: '☰' },
   ];

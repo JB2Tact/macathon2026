@@ -11,6 +11,7 @@ import { ResultsPage } from './pages/ResultsPage';
 import { HistoryPage } from './pages/HistoryPage';
 import { ConnectBankPage } from './pages/ConnectBankPage';
 import { DashboardPage } from './pages/DashboardPage';
+import { ContactsPage } from './pages/ContactsPage';
 import type { ReactNode } from 'react';
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
@@ -40,6 +41,7 @@ function AppRoutes() {
         <Route path="/results" element={<ProtectedRoute><PageTransition><ResultsPage /></PageTransition></ProtectedRoute>} />
         <Route path="/history" element={<ProtectedRoute><PageTransition><HistoryPage /></PageTransition></ProtectedRoute>} />
         <Route path="/connect-bank" element={<ProtectedRoute><PageTransition><ConnectBankPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/contacts" element={<ProtectedRoute><PageTransition><ContactsPage /></PageTransition></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </AnimatePresence>
