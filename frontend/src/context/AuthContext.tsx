@@ -28,12 +28,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Check if we're in demo mode (placeholder credentials)
+    const isDemoMode = import.meta.env.VITE_FIREBASE_API_KEY === 'demo-api-key';
+
+    if (isDemoMode) {
+      // In demo mode, skip Firebase auth and show login page
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
       setFirebaseUser(fbUser);
       if (fbUser) {
-        const userDoc = await getDoc(doc(db, 'users', fbUser.uid));
-        if (userDoc.exists()) {
-          setUser(userDoc.data() as User);
+        try {
+          const userDoc = await getDoc(doc(db, 'users', fbUser.uid));
+          if (userDoc.exists()) {
+            setUser(userDoc.data() as User);
+          }
+        } catch (err) {
+          console.error('Error fetching user:', err);
         }
       } else {
         setUser(null);
@@ -42,6 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
     return unsubscribe;
   }, []);
+
 
   const signIn = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password);
