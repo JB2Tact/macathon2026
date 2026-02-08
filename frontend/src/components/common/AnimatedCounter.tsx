@@ -1,5 +1,5 @@
 
-import { motion, useSpring, useTransform, useMotionValue, useInView } from 'framer-motion';
+import { useSpring, useMotionValue, useInView } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 
 interface AnimatedCounterProps {
@@ -11,7 +11,6 @@ interface AnimatedCounterProps {
 
 export function AnimatedCounter({ value, duration = 1.5, prefix = '', decimals = 2 }: AnimatedCounterProps) {
     const ref = useRef<HTMLSpanElement>(null);
-    const inView = useInView(ref, { once: true });
     const motionValue = useMotionValue(0);
     const springValue = useSpring(motionValue, {
         damping: 50,

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 import { Card } from '../common/Card';
 
 interface AIExplanationProps {
@@ -16,7 +15,7 @@ export function AIExplanation({ explanation }: AIExplanationProps) {
       style={{
         borderLeft: '4px solid #00C853',
         marginTop: '24px',
-        overflow: 'hidden'
+        overflow: 'hidden',
       }}
     >
       <div
@@ -26,19 +25,36 @@ export function AIExplanation({ explanation }: AIExplanationProps) {
           alignItems: 'center',
           justifyContent: 'space-between',
           cursor: 'pointer',
-          marginBottom: isExpanded ? '12px' : '0'
+          marginBottom: isExpanded ? '12px' : '0',
         }}
       >
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-emerald-500" />
-          <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-green-400">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '16px' }}>&#10024;</span>
+          <span
+            style={{
+              fontWeight: 700,
+              color: '#00C853',
+              fontSize: '14px',
+            }}
+          >
             AI Analysis
           </span>
-          <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-500/10 text-emerald-500 rounded-full">
+          <span
+            style={{
+              fontSize: '10px',
+              fontWeight: 700,
+              padding: '2px 8px',
+              background: '#00C85315',
+              color: '#00C853',
+              borderRadius: '10px',
+            }}
+          >
             GEMINI
           </span>
         </div>
-        {isExpanded ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
+        <span style={{ fontSize: '14px', color: '#666666' }}>
+          {isExpanded ? '\u25B2' : '\u25BC'}
+        </span>
       </div>
 
       <AnimatePresence>
@@ -49,7 +65,15 @@ export function AIExplanation({ explanation }: AIExplanationProps) {
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap dark:text-gray-300">
+            <p
+              style={{
+                fontSize: '14px',
+                color: '#333333',
+                lineHeight: 1.6,
+                whiteSpace: 'pre-wrap',
+                margin: 0,
+              }}
+            >
               {explanation}
             </p>
           </motion.div>

@@ -1,66 +1,145 @@
-
 import { motion } from 'framer-motion';
-import { User, Globe } from 'lucide-react';
 
 interface RouteVisualizationProps {
-    blockchain: string;
+  blockchain: string;
 }
 
+const nodeStyle: React.CSSProperties = {
+  width: '48px',
+  height: '48px',
+  borderRadius: '50%',
+  border: '2px solid #00C853',
+  background: '#FFFFFF',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  zIndex: 1,
+  fontSize: '20px',
+};
+
+const labelStyle: React.CSSProperties = {
+  fontSize: '13px',
+  fontWeight: 500,
+  color: '#666666',
+  marginTop: '8px',
+};
+
 export function RouteVisualization({ blockchain }: RouteVisualizationProps) {
-    return (
-        <div className="relative py-12 px-4 mb-8 select-none">
-            {/* Background Track */}
-            <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-800 -translate-y-1/2 rounded-full" />
+  const chainIcon = blockchain === 'stellar' ? '\u2605' : blockchain === 'ethereum' ? '\u25C6' : '\u25CE';
 
-            {/* Animated Path */}
-            <motion.div
-                className="absolute top-1/2 left-0 h-1 bg-emerald-500 -translate-y-1/2 rounded-full"
-                initial={{ width: '0%' }}
-                animate={{ width: '100%' }}
-                transition={{ duration: 1.5, ease: "easeInOut", repeat: Infinity, repeatDelay: 1 }}
-            />
+  return (
+    <div
+      style={{
+        position: 'relative',
+        padding: '48px 16px',
+        marginBottom: '24px',
+        userSelect: 'none',
+      }}
+    >
+      {/* Background Track */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: 0,
+          width: '100%',
+          height: '4px',
+          background: '#E0E0E0',
+          transform: 'translateY(-50%)',
+          borderRadius: '4px',
+        }}
+      />
 
-            <div className="relative flex justify-between items-center max-w-lg mx-auto">
-                {/* Source Node */}
-                <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="flex flex-col items-center gap-2"
-                >
-                    <div className="w-12 h-12 bg-[#0A0A0A] border-2 border-emerald-500 rounded-full flex items-center justify-center z-10">
-                        <User className="w-5 h-5 text-emerald-500" />
-                    </div>
-                    <span className="text-sm font-medium text-gray-300">You</span>
-                </motion.div>
+      {/* Animated Path */}
+      <motion.div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: 0,
+          height: '4px',
+          background: '#00C853',
+          transform: 'translateY(-50%)',
+          borderRadius: '4px',
+        }}
+        initial={{ width: '0%' }}
+        animate={{ width: '100%' }}
+        transition={{ duration: 1.5, ease: 'easeInOut', repeat: Infinity, repeatDelay: 1 }}
+      />
 
-                {/* Blockchain Node (Center) */}
-                <motion.div
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                    className="flex flex-col items-center gap-2"
-                >
-                    <div className="w-16 h-16 bg-[#0A0A0A] border-2 border-emerald-500 rounded-2xl flex items-center justify-center z-10 shadow-[0_0_30px_rgba(0,200,83,0.3)]">
-                        <span className="text-2xl capitalize text-white font-bold">
-                            {blockchain === 'stellar' ? '★' : blockchain === 'ethereum' ? '◆' : '◎'}
-                        </span>
-                    </div>
-                    <span className="text-sm font-medium text-emerald-500 capitalize">{blockchain} Network</span>
-                </motion.div>
+      <div
+        style={{
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          maxWidth: '480px',
+          margin: '0 auto',
+        }}
+      >
+        {/* Source Node */}
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+        >
+          <div style={nodeStyle}>
+            <span style={{ color: '#00C853' }}>&#9788;</span>
+          </div>
+          <span style={labelStyle}>You</span>
+        </motion.div>
 
-                {/* Destination Node */}
-                <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 1 }}
-                    className="flex flex-col items-center gap-2"
-                >
-                    <div className="w-12 h-12 bg-[#0A0A0A] border-2 border-emerald-500 rounded-full flex items-center justify-center z-10">
-                        <Globe className="w-5 h-5 text-emerald-500" />
-                    </div>
-                    <span className="text-sm font-medium text-gray-300">Recipient</span>
-                </motion.div>
-            </div>
-        </div>
-    );
+        {/* Blockchain Node */}
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+        >
+          <div
+            style={{
+              width: '64px',
+              height: '64px',
+              borderRadius: '16px',
+              border: '2px solid #00C853',
+              background: '#FFFFFF',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1,
+              boxShadow: '0 0 24px rgba(0,200,83,0.2)',
+              fontSize: '24px',
+              fontWeight: 700,
+              color: '#0A0A0A',
+            }}
+          >
+            {chainIcon}
+          </div>
+          <span
+            style={{
+              fontSize: '13px',
+              fontWeight: 500,
+              color: '#00C853',
+              marginTop: '8px',
+              textTransform: 'capitalize',
+            }}
+          >
+            {blockchain} Network
+          </span>
+        </motion.div>
+
+        {/* Destination Node */}
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 1 }}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+        >
+          <div style={nodeStyle}>
+            <span style={{ color: '#00C853' }}>&#127760;</span>
+          </div>
+          <span style={labelStyle}>Recipient</span>
+        </motion.div>
+      </div>
+    </div>
+  );
 }
