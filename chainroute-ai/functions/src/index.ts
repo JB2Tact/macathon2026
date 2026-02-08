@@ -6,6 +6,7 @@ import { sendAnalyze, sendConfirm } from './handlers/send';
 import { getTransactions, getTransaction } from './handlers/transactions';
 import { bankLink, bankStatus, bankDisconnect } from './handlers/bank';
 import { getContacts, createContact, updateContact, deleteContact } from './handlers/contacts';
+import { getMarketPrices, analyzeMarket, getSinglePrice, convertCurrency } from './handlers/market';
 
 admin.initializeApp();
 
@@ -37,20 +38,29 @@ async function authMiddleware(
 
 app.use(authMiddleware);
 
-// Routes
+// Routes - Send
 app.post('/api/send/analyze', sendAnalyze);
 app.post('/api/send/confirm', sendConfirm);
+
+// Routes - Transactions
 app.get('/api/transactions', getTransactions);
 app.get('/api/transactions/:id', getTransaction);
+
+// Routes - Bank
 app.post('/api/bank/link', bankLink);
 app.get('/api/bank/status', bankStatus);
 app.post('/api/bank/disconnect', bankDisconnect);
 
-// Contacts routes
+// Routes - Contacts
 app.get('/api/contacts', getContacts);
 app.post('/api/contacts', createContact);
 app.put('/api/contacts/:id', updateContact);
 app.delete('/api/contacts/:id', deleteContact);
 
-export const api = functions.https.onRequest(app);
+// Routes - Market (Crypto Prices & AI Analysis)
+app.get('/api/market/prices', getMarketPrices);
+app.post('/api/market/analyze', analyzeMarket);
+app.get('/api/market/price/:symbol', getSinglePrice);
+app.get('/api/market/convert', convertCurrency);
 
+export const api = functions.https.onRequest(app);

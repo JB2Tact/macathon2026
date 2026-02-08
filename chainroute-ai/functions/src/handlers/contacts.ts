@@ -122,12 +122,13 @@ export async function updateContact(req: Request, res: Response) {
 
         await docRef.update(updates);
 
-        const { id: _existingId, ...existingData } = existingContact;
-        res.json({
-            id,
-            ...existingData,
+        // Merge existing data with updates, using the URL param id
+        const responseData = {
+            ...existingContact,
             ...updates,
-        });
+            id, // Override any id from existingContact
+        };
+        res.json(responseData);
     } catch (err) {
         console.error('updateContact error:', err);
         res.status(500).json({ error: 'Failed to update contact' });
