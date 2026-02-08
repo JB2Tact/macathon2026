@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { auth } from '../config/firebase';
-import type { SendRequest, SendResponse, ConfirmRequest, ConfirmResponse, Transaction, BankLinkResponse, BankStatusResponse, Contact, CreateContactRequest } from '../types';
+import type { SendRequest, SendResponse, ConfirmRequest, ConfirmResponse, Transaction, BankLinkResponse, BankStatusResponse, Contact, CreateContactRequest, MarketPricesResponse, MarketAnalysis, CryptoPrice, ConversionResult } from '../types';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001',
@@ -69,4 +69,40 @@ export async function updateContact(id: string, data: Partial<CreateContactReque
 
 export async function deleteContact(id: string): Promise<void> {
   await api.delete(`/api/contacts/${id}`);
+}
+
+// Market & Crypto Prices
+export async function getMarketPrices(symbols?: string[]): Promise<MarketPricesResponse> {
+  const params = symbols ? { symbols: symbols.join(',') } : {};
+  const res = await api.get<MarketPricesResponse>('/api/market/prices', { params });
+  return res.data;
+}
+
+export async function getMarketAnalysis(
+  amount: number,
+  sourceCurrency?: string,
+  destinationCountry?: string
+): Promise<MarketAnalysis> {
+  const res = await api.post<MarketAnalysis>('/api/market/analyze', {
+    amount,
+    sourceCurrency: sourceCurrency || 'USD',
+    destinationCountry: destinationCountry || 'Global',
+  });
+  return res.data;
+}
+
+export async function getCryptoPrice(symbol: string): Promise<{ price: CryptoPrice; timestamp: string }> {
+  const res = await api.get<{ price: CryptoPrice; timestamp: string }>(`/api/market/price/${symbol}`);
+  return res.data;
+}
+
+export async function convertCurrency(
+  amount: number,
+  from: string,
+  to: string
+): Promise<ConversionResult> {
+  const res = await api.get<ConversionResult>('/api/market/convert', {
+    params: { amount, from, to },
+  });
+  return res.data;
 }

@@ -103,3 +103,51 @@ export interface CreateContactRequest {
   email?: string;
   notes?: string;
 }
+
+// Market & Crypto Prices
+export interface CryptoPrice {
+  symbol: string;
+  name: string;
+  price: number;
+  change24h: number;
+  marketCap: number;
+  volume24h: number;
+  lastUpdated: string;
+}
+
+export interface NetworkFee {
+  blockchain: string;
+  feeUSD: number;
+  feeNative: number;
+  estimatedTime: string;
+  congestionLevel: 'low' | 'medium' | 'high';
+}
+
+export interface RouteOption {
+  blockchain: string;
+  score: number;
+  fees: NetworkFee;
+  price: CryptoPrice;
+  reasoning: string;
+}
+
+export interface MarketAnalysis {
+  recommendation: string;
+  routes: RouteOption[];
+  marketConditions: string;
+  aiExplanation: string;
+  timestamp: string;
+}
+
+export interface MarketPricesResponse {
+  prices: Record<string, CryptoPrice>;
+  timestamp: string;
+}
+
+export interface ConversionResult {
+  amount: number;
+  rate: number;
+  from: string;
+  to: string;
+  timestamp: string;
+}
