@@ -20,7 +20,7 @@ export function RecentTransactions({ onViewAll }: { onViewAll: () => void }) {
         transition={{ delay: 0.6 }}
         style={{ marginTop: '40px' }}
       >
-        <h3 style={{ fontSize: '18px', fontWeight: 600, color: '#0A0A0A', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text)', marginBottom: '16px' }}>
           Recent Activity
         </h3>
         <Card style={{ textAlign: 'center', padding: '40px' }}>
@@ -28,8 +28,8 @@ export function RecentTransactions({ onViewAll }: { onViewAll: () => void }) {
             style={{
               width: '24px',
               height: '24px',
-              border: '3px solid #E0E0E0',
-              borderTopColor: '#00C853',
+              border: '3px solid var(--border)',
+              borderTopColor: 'var(--green)',
               borderRadius: '50%',
               animation: 'spin 0.7s linear infinite',
               display: 'inline-block',
@@ -55,7 +55,7 @@ export function RecentTransactions({ onViewAll }: { onViewAll: () => void }) {
           marginBottom: '16px',
         }}
       >
-        <h3 style={{ fontSize: '18px', fontWeight: 600, color: '#0A0A0A' }}>
+        <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text)' }}>
           Recent Activity
         </h3>
         {recent.length > 0 && (
@@ -64,7 +64,7 @@ export function RecentTransactions({ onViewAll }: { onViewAll: () => void }) {
             style={{
               background: 'none',
               border: 'none',
-              color: '#00C853',
+              color: 'var(--green)',
               fontSize: '14px',
               fontWeight: 500,
               cursor: 'pointer',
@@ -78,7 +78,7 @@ export function RecentTransactions({ onViewAll }: { onViewAll: () => void }) {
 
       {error && (
         <Card style={{ textAlign: 'center', padding: '32px' }}>
-          <p style={{ color: '#666666', fontSize: '14px' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
             Could not load transactions.
           </p>
         </Card>
@@ -87,10 +87,10 @@ export function RecentTransactions({ onViewAll }: { onViewAll: () => void }) {
       {!error && recent.length === 0 && (
         <Card style={{ textAlign: 'center', padding: '40px' }}>
           <div style={{ fontSize: '32px', marginBottom: '12px' }}>&#128172;</div>
-          <p style={{ fontSize: '15px', fontWeight: 500, color: '#0A0A0A', marginBottom: '4px' }}>
+          <p style={{ fontSize: '15px', fontWeight: 500, color: 'var(--text)', marginBottom: '4px' }}>
             No transactions yet
           </p>
-          <p style={{ fontSize: '13px', color: '#666666' }}>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
             Send your first transfer and it will appear here.
           </p>
         </Card>
@@ -100,11 +100,11 @@ export function RecentTransactions({ onViewAll }: { onViewAll: () => void }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {recent.map((tx, i) => {
             const statusColor =
-              tx.status === 'completed' ? '#00C853' :
-              tx.status === 'pending' ? '#FFB300' : '#FF5252';
+              tx.status === 'completed' ? 'var(--green)' :
+              tx.status === 'pending' ? 'var(--warning)' : 'var(--error)';
             const statusBg =
-              tx.status === 'completed' ? '#00C85315' :
-              tx.status === 'pending' ? '#FFB30015' : '#FF525215';
+              tx.status === 'completed' ? 'var(--green-tint)' :
+              tx.status === 'pending' ? 'var(--warning-tint)' : 'var(--error-tint)';
             const chain = tx.selectedRoute?.blockchain || tx.routes?.[0]?.blockchain;
 
             return (
@@ -144,13 +144,13 @@ export function RecentTransactions({ onViewAll }: { onViewAll: () => void }) {
                          tx.status === 'pending' ? '\u25CF' : '\u2717'}
                       </div>
                       <div>
-                        <p style={{ fontSize: '14px', fontWeight: 500, color: '#0A0A0A' }}>
+                        <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text)' }}>
                           {tx.input?.parsedRecipient
                             ? `Sent to ${tx.input.parsedRecipient}`
                             : 'Transfer'}
                           {tx.input?.parsedCountry ? ` (${tx.input.parsedCountry})` : ''}
                         </p>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#999999' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-muted)' }}>
                           <span>
                             {new Date(tx.createdAt).toLocaleDateString(undefined, {
                               month: 'short',
@@ -172,7 +172,7 @@ export function RecentTransactions({ onViewAll }: { onViewAll: () => void }) {
                         style={{
                           fontSize: '15px',
                           fontWeight: 600,
-                          color: '#0A0A0A',
+                          color: 'var(--text)',
                           fontFamily: 'JetBrains Mono, monospace',
                         }}
                       >

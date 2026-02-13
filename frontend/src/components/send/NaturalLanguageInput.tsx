@@ -15,6 +15,7 @@ interface NaturalLanguageInputProps {
   onSubmit: (text: string) => void;
   loading: boolean;
   prefill?: Prefill;
+  compact?: boolean;
 }
 
 const countries = [
@@ -25,7 +26,7 @@ const countries = [
 
 const quickAmounts = [25, 50, 100, 200, 500];
 
-export function NaturalLanguageInput({ onSubmit, loading, prefill }: NaturalLanguageInputProps) {
+export function NaturalLanguageInput({ onSubmit, loading, prefill, compact }: NaturalLanguageInputProps) {
   const [amount, setAmount] = useState('');
   const [recipient, setRecipient] = useState('');
   const [country, setCountry] = useState('');
@@ -58,15 +59,246 @@ export function NaturalLanguageInput({ onSubmit, loading, prefill }: NaturalLang
     onSubmit(text);
   };
 
+  const displayCountries = compact ? countries.slice(0, 10) : countries;
+
+  if (compact) {
+    return (
+      <>
+        <ContactSelector onSelect={handleContactSelect} />
+        {/* Amount */}
+        <div style={{ marginBottom: '14px' }}>
+          <label style={labelStyle}>Amount (USD)</label>
+          <div style={{ position: 'relative' }}>
+            <span style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', fontSize: '18px', fontWeight: 700, color: 'var(--text-secondary)' }}>$</span>
+            <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0.00" min="0" step="0.01" aria-label="Transfer amount in USD" style={{ ...inputStyle, paddingLeft: '32px', fontSize: '18px', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace', height: '48px' }} onFocus={handleFocus} onBlur={handleBlur} disabled={loading} />
+          </div>
+        </div>
+        <div style={{ marginBottom: '14px' }}>
+          <label style={labelStyle}>Recipient Name</label>
+          <input type="text" value={recipient} onChange={(e) => setRecipient(e.target.value)} placeholder="Enter recipient's name" style={inputStyle} onFocus={handleFocus} onBlur={handleBlur} disabled={loading} />
+        </div>
+        <div style={{ marginBottom: '16px' }}>
+          <label style={labelStyle}>Destination Country</label>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {countries.slice(0, 10).map((c) => (
+              <button key={c} onClick={() => setCountry(c)} disabled={loading} aria-pressed={country === c} style={{ padding: '7px 14px', borderRadius: '20px', border: country === c ? '1.5px solid var(--green)' : '1px solid var(--border)', background: country === c ? 'var(--green-tint)' : 'var(--surface)', color: country === c ? 'var(--green)' : 'var(--text-secondary)', fontSize: '13px', fontWeight: country === c ? 600 : 400, cursor: 'pointer', fontFamily: 'Inter, sans-serif', transition: 'all 0.15s ease' }}>{c}</button>
+            ))}
+          </div>
+        </div>
+        <div style={{ marginBottom: '20px' }}>
+          <label style={labelStyle}>Wallet Address</label>
+          <input type="text" value={walletAddress} onChange={(e) => setWalletAddress(e.target.value)} placeholder="e.g. GBX4K...or 0x1a2..." style={{ ...inputStyle, fontFamily: 'JetBrains Mono, monospace', fontSize: '13px', letterSpacing: '0.3px' }} onFocus={handleFocus} onBlur={handleBlur} disabled={loading} />
+          {network && (<div style={{ display: 'inline-block', marginTop: '8px', padding: '4px 12px', borderRadius: '12px', background: 'var(--green-tint)', color: 'var(--green)', fontSize: '12px', fontWeight: 600 }}>{network}</div>)}
+        </div>
+        <Button onClick={handleSubmit} loading={loading} disabled={!canSubmit} size="md" aria-busy={loading}>
+          {loading ? 'Finding Best Route...' : 'Find Best Route'}
+        </Button>
+      </>
+    );
+  }
+
+  const formContent = (
+    <>
+      {/* Contact Selector */}
+      <ContactSelector onSelect={handleContactSelect} />
+
+      {/* Amount */}
+      <div style={{ marginBottom: compact ? '14px' : '20px' }}>
+        <label style={labelStyle}>Amount (USD)</label>
+        <div style={{ position: 'relative' }}>
+          <span
+            style={{
+              position: 'absolute',
+              left: '16px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              fontSize: compact ? '18px' : '24px',
+              fontWeight: 700,
+              color: 'var(--text-secondary)',
+            }}
+          >
+            $
+          </span>
+          <input
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="0.00"
+            min="0"
+            step="0.01"
+            aria-label="Transfer amount in USD"
+            style={{
+              ...inputStyle,
+              paddingLeft: compact ? '32px' : '40px',
+              fontSize: compact ? '18px' : '24px',
+              fontWeight: 700,
+              fontFamily: 'JetBrains Mono, monospace',
+              height: compact ? '48px' : '56px',
+            }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            disabled={loading}
+          />
+        </div>
+        {!compact && (
+          <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+            {quickAmounts.map((qa) => (
+              <button
+                key={qa}
+                onClick={() => setAmount(String(qa))}
+                disabled={loading}
+                aria-label={`Quick amount $${qa}`}
+                style={{
+                  flex: 1,
+                  padding: '8px 0',
+                  borderRadius: '8px',
+                  border: amount === String(qa) ? '1.5px solid var(--green)' : '1px solid var(--border)',
+                  background: amount === String(qa) ? 'var(--green-tint)' : 'var(--surface)',
+                  color: amount === String(qa) ? 'var(--green)' : 'var(--text-secondary)',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  fontFamily: 'JetBrains Mono, monospace',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                ${qa}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Recipient */}
+      <div style={{ marginBottom: compact ? '14px' : '20px' }}>
+        <label style={labelStyle}>Recipient Name</label>
+        <input
+          type="text"
+          value={recipient}
+          onChange={(e) => setRecipient(e.target.value)}
+          placeholder="Enter recipient's name"
+          style={inputStyle}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          disabled={loading}
+        />
+      </div>
+
+      {/* Country */}
+      <div style={{ marginBottom: compact ? '16px' : '24px' }}>
+        <label style={labelStyle}>Destination Country</label>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          {displayCountries.map((c) => (
+            <button
+              key={c}
+              onClick={() => setCountry(c)}
+              disabled={loading}
+              aria-pressed={country === c}
+              style={{
+                padding: compact ? '7px 14px' : '8px 16px',
+                borderRadius: '20px',
+                border: country === c ? '1.5px solid var(--green)' : '1px solid var(--border)',
+                background: country === c ? 'var(--green-tint)' : 'var(--surface)',
+                color: country === c ? 'var(--green)' : 'var(--text-secondary)',
+                fontSize: '13px',
+                fontWeight: country === c ? 600 : 400,
+                cursor: 'pointer',
+                fontFamily: 'Inter, sans-serif',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Wallet Address */}
+      <div style={{ marginBottom: '20px' }}>
+        <label style={labelStyle}>Wallet Address</label>
+        <input
+          type="text"
+          value={walletAddress}
+          onChange={(e) => setWalletAddress(e.target.value)}
+          placeholder="e.g. GBX4K...or 0x1a2..."
+          style={{
+            ...inputStyle,
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: '13px',
+            letterSpacing: '0.3px',
+          }}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          disabled={loading}
+        />
+        {network && (
+          <div
+            style={{
+              display: 'inline-block',
+              marginTop: '8px',
+              padding: '4px 12px',
+              borderRadius: '12px',
+              background: 'var(--green-tint)',
+              color: 'var(--green)',
+              fontSize: '12px',
+              fontWeight: 600,
+            }}
+          >
+            {network}
+          </div>
+        )}
+      </div>
+
+      {/* Summary preview */}
+      {canSubmit && (
+        <div
+          style={{
+            background: 'var(--bg)',
+            borderRadius: '10px',
+            padding: '12px 16px',
+            marginBottom: '16px',
+            fontSize: '14px',
+            color: 'var(--text-secondary)',
+          }}
+        >
+          Sending{' '}
+          <strong style={{ fontFamily: 'JetBrains Mono, monospace', color: 'var(--green)' }}>
+            ${parseFloat(amount).toFixed(2)}
+          </strong>{' '}
+          to <strong style={{ color: 'var(--text)' }}>{recipient.trim()}</strong> in <strong style={{ color: 'var(--text)' }}>{country}</strong>
+          {walletAddress && (
+            <>
+              {' '}at{' '}
+              <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '12px' }}>
+                {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+              </span>
+            </>
+          )}
+          {network && <> via <strong style={{ color: 'var(--text)' }}>{network}</strong></>}
+        </div>
+      )}
+
+      <Button
+        onClick={handleSubmit}
+        loading={loading}
+        disabled={!canSubmit}
+        size="lg"
+        aria-busy={loading}
+      >
+        {loading ? 'Finding Best Route...' : 'Find Best Route'}
+      </Button>
+    </>
+  );
+
   return (
-    <div className="fade-in">
+    <div>
       <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '36px', fontWeight: 700, color: '#0A0A0A', lineHeight: 1.2 }}>
+        <h1 style={{ fontSize: '36px', fontWeight: 700, color: 'var(--text)', lineHeight: 1.2 }}>
           Send money anywhere,
           <br />
-          <span style={{ color: '#00C853' }}>in seconds.</span>
+          <span style={{ color: 'var(--green)' }}>in seconds.</span>
         </h1>
-        <p style={{ color: '#666666', fontSize: '16px', marginTop: '12px' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '16px', marginTop: '12px' }}>
           Choose amount, recipient, and destination. AI finds the best blockchain route.
         </p>
       </div>
@@ -79,188 +311,7 @@ export function NaturalLanguageInput({ onSubmit, loading, prefill }: NaturalLang
           padding: '32px',
         }}
       >
-        {/* Contact Selector */}
-        <ContactSelector onSelect={handleContactSelect} />
-
-        {/* Amount */}
-        <div style={{ marginBottom: '20px' }}>
-          <label style={labelStyle}>Amount (USD)</label>
-          <div style={{ position: 'relative' }}>
-            <span
-              style={{
-                position: 'absolute',
-                left: '16px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                fontSize: '24px',
-                fontWeight: 700,
-                color: '#666666',
-              }}
-            >
-              $
-            </span>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="0.00"
-              min="0"
-              step="0.01"
-              style={{
-                ...inputStyle,
-                paddingLeft: '40px',
-                fontSize: '24px',
-                fontWeight: 700,
-                fontFamily: 'JetBrains Mono, monospace',
-                height: '56px',
-              }}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              disabled={loading}
-            />
-          </div>
-          <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
-            {quickAmounts.map((qa) => (
-              <button
-                key={qa}
-                onClick={() => setAmount(String(qa))}
-                disabled={loading}
-                style={{
-                  flex: 1,
-                  padding: '8px 0',
-                  borderRadius: '8px',
-                  border: amount === String(qa) ? '1.5px solid #00C853' : '1px solid #E0E0E0',
-                  background: amount === String(qa) ? '#00C85310' : '#FFFFFF',
-                  color: amount === String(qa) ? '#00C853' : '#333333',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  fontFamily: 'JetBrains Mono, monospace',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                ${qa}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Recipient */}
-        <div style={{ marginBottom: '20px' }}>
-          <label style={labelStyle}>Recipient Name</label>
-          <input
-            type="text"
-            value={recipient}
-            onChange={(e) => setRecipient(e.target.value)}
-            placeholder="Enter recipient's name"
-            style={inputStyle}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            disabled={loading}
-          />
-        </div>
-
-        {/* Country */}
-        <div style={{ marginBottom: '24px' }}>
-          <label style={labelStyle}>Destination Country</label>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-            {countries.map((c) => (
-              <button
-                key={c}
-                onClick={() => setCountry(c)}
-                disabled={loading}
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '20px',
-                  border: country === c ? '1.5px solid #00C853' : '1px solid #E0E0E0',
-                  background: country === c ? '#00C85310' : '#FFFFFF',
-                  color: country === c ? '#00C853' : '#666666',
-                  fontSize: '13px',
-                  fontWeight: country === c ? 600 : 400,
-                  cursor: 'pointer',
-                  fontFamily: 'Inter, sans-serif',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Wallet Address */}
-        <div style={{ marginBottom: '20px' }}>
-          <label style={labelStyle}>Wallet Address</label>
-          <input
-            type="text"
-            value={walletAddress}
-            onChange={(e) => setWalletAddress(e.target.value)}
-            placeholder="e.g. GBX4K...or 0x1a2..."
-            style={{
-              ...inputStyle,
-              fontFamily: 'JetBrains Mono, monospace',
-              fontSize: '13px',
-              letterSpacing: '0.3px',
-            }}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            disabled={loading}
-          />
-          {network && (
-            <div
-              style={{
-                display: 'inline-block',
-                marginTop: '8px',
-                padding: '4px 12px',
-                borderRadius: '12px',
-                background: '#00C85310',
-                color: '#00C853',
-                fontSize: '12px',
-                fontWeight: 600,
-              }}
-            >
-              {network}
-            </div>
-          )}
-        </div>
-
-        {/* Summary preview */}
-        {canSubmit && (
-          <div
-            style={{
-              background: '#F5F5F5',
-              borderRadius: '10px',
-              padding: '12px 16px',
-              marginBottom: '16px',
-              fontSize: '14px',
-              color: '#333333',
-            }}
-          >
-            Sending{' '}
-            <strong style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00C853' }}>
-              ${parseFloat(amount).toFixed(2)}
-            </strong>{' '}
-            to <strong>{recipient.trim()}</strong> in <strong>{country}</strong>
-            {walletAddress && (
-              <>
-                {' '}at{' '}
-                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '12px' }}>
-                  {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
-                </span>
-              </>
-            )}
-            {network && <> via <strong>{network}</strong></>}
-          </div>
-        )}
-
-        <Button
-          onClick={handleSubmit}
-          loading={loading}
-          disabled={!canSubmit}
-          size="lg"
-        >
-          {loading ? 'Finding Best Route...' : 'Find Best Route'}
-        </Button>
+        {formContent}
       </Card>
     </div>
   );
@@ -270,7 +321,7 @@ const labelStyle: React.CSSProperties = {
   display: 'block',
   fontSize: '12px',
   fontWeight: 500,
-  color: '#999999',
+  color: 'var(--text-muted)',
   marginBottom: '6px',
   textTransform: 'uppercase',
   letterSpacing: '0.5px',
@@ -280,21 +331,21 @@ const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '12px 14px',
   borderRadius: '10px',
-  border: '1.5px solid #E0E0E0',
+  border: '1.5px solid var(--border)',
   fontSize: '15px',
   fontFamily: 'Inter, sans-serif',
   outline: 'none',
   transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-  background: '#FFFFFF',
-  color: '#0A0A0A',
+  background: 'var(--surface)',
+  color: 'var(--text)',
 };
 
 function handleFocus(e: React.FocusEvent<HTMLInputElement>) {
-  e.target.style.borderColor = '#00C853';
+  e.target.style.borderColor = 'var(--green)';
   e.target.style.boxShadow = '0 0 0 3px rgba(0,200,83,0.1)';
 }
 
 function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
-  e.target.style.borderColor = '#E0E0E0';
+  e.target.style.borderColor = 'var(--border)';
   e.target.style.boxShadow = 'none';
 }

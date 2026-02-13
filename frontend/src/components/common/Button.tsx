@@ -40,17 +40,17 @@ export function Button({
 
   const variants: Record<string, React.CSSProperties> = {
     primary: {
-      background: '#00C853',
+      background: 'var(--green)',
       color: '#FFFFFF',
     },
     secondary: {
-      background: '#F5F5F5',
-      color: '#0A0A0A',
-      border: '1px solid #E0E0E0',
+      background: 'var(--surface)',
+      color: 'var(--text)',
+      border: '1px solid var(--border)',
     },
     ghost: {
       background: 'transparent',
-      color: '#00C853',
+      color: 'var(--green)',
     },
   };
 
@@ -58,16 +58,17 @@ export function Button({
     <button
       style={{ ...base, ...sizes[size], ...variants[variant], ...style }}
       disabled={disabled || loading}
+      aria-busy={loading || undefined}
       onMouseEnter={(e) => {
-        if (variant === 'primary') {
-          (e.target as HTMLButtonElement).style.background = '#00E676';
+        if (variant === 'primary' && !disabled && !loading) {
+          (e.target as HTMLButtonElement).style.background = 'var(--green-hover)';
           (e.target as HTMLButtonElement).style.transform = 'translateY(-1px)';
           (e.target as HTMLButtonElement).style.boxShadow = '0 4px 20px rgba(0,200,83,0.3)';
         }
       }}
       onMouseLeave={(e) => {
         if (variant === 'primary') {
-          (e.target as HTMLButtonElement).style.background = '#00C853';
+          (e.target as HTMLButtonElement).style.background = 'var(--green)';
           (e.target as HTMLButtonElement).style.transform = 'translateY(0)';
           (e.target as HTMLButtonElement).style.boxShadow = 'none';
         }
@@ -76,6 +77,8 @@ export function Button({
     >
       {loading && (
         <span
+          role="status"
+          aria-label="Loading"
           style={{
             width: '16px',
             height: '16px',

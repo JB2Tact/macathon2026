@@ -3,7 +3,7 @@ import { auth } from '../config/firebase';
 import type { SendRequest, SendResponse, ConfirmRequest, ConfirmResponse, Transaction, BankLinkResponse, BankStatusResponse, Contact, CreateContactRequest, MarketPricesResponse, MarketAnalysis, CryptoPrice, ConversionResult } from '../types';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '',
 });
 
 api.interceptors.request.use(async (config) => {
@@ -25,8 +25,11 @@ export async function confirmSend(data: ConfirmRequest): Promise<ConfirmResponse
   return res.data;
 }
 
-export async function getTransactions(): Promise<Transaction[]> {
-  const res = await api.get<Transaction[]>('/api/transactions');
+export async function getTransactions(cursor?: string, limit?: number): Promise<{ transactions: Transaction[]; nextCursor: string | null }> {
+  const params: Record<string, string> = {};
+  if (cursor) params.cursor = cursor;
+  if (limit) params.limit = String(limit);
+  const res = await api.get<{ transactions: Transaction[]; nextCursor: string | null }>('/api/transactions', { params });
   return res.data;
 }
 

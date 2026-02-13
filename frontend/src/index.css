@@ -1,31 +1,54 @@
-:root {
-  /* Primary Colors */
-  --white: #FFFFFF;
-  --black: #0A0A0A;
-  --green: #00C853;
-
-  /* Secondary Colors */
-  --off-white: #F5F5F5;
-  --soft-black: #1A1A1A;
-  --green-light: #00E676;
-  --green-dark: #00A843;
-
-  /* Neutral Grays */
-  --charcoal: #333333;
-  --gray: #666666;
-  --gray-light: #999999;
+/* ========= Theme Variables ========= */
+[data-theme="light"], :root {
+  --bg: #F5F5F5;
+  --surface: #FFFFFF;
+  --surface-glass: rgba(255, 255, 255, 0.7);
+  --text: #0A0A0A;
+  --text-secondary: #666666;
+  --text-muted: #999999;
   --border: #E0E0E0;
-
-  /* Semantic Colors */
-  --success: #00C853;
+  --green: #00C853;
+  --green-hover: #00E676;
+  --green-tint: rgba(0, 200, 83, 0.08);
+  --green-tint-strong: rgba(0, 200, 83, 0.15);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
+  --nav-bg: rgba(255, 255, 255, 0.8);
   --error: #FF5252;
+  --error-tint: rgba(255, 82, 82, 0.08);
   --warning: #FFB300;
+  --warning-tint: rgba(255, 179, 0, 0.08);
   --info: #2196F3;
+  --stellar-color: #000000;
+  --ethereum-color: #627EEA;
+  --solana-color: #9945FF;
+}
 
-  /* Design Principles */
-  --radius: 8px;
-  --shadow-subtle: 0 2px 4px rgba(0,0,0,0.05);
-  --grid: 8px;
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --surface: #161616;
+  --surface-glass: rgba(22, 22, 22, 0.8);
+  --text: #F0F0F0;
+  --text-secondary: #A0A0A0;
+  --text-muted: #707070;
+  --border: #2A2A2A;
+  --green: #00C853;
+  --green-hover: #00E676;
+  --green-tint: rgba(0, 200, 83, 0.12);
+  --green-tint-strong: rgba(0, 200, 83, 0.2);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.4);
+  --nav-bg: rgba(22, 22, 22, 0.85);
+  --error: #FF6B6B;
+  --error-tint: rgba(255, 107, 107, 0.12);
+  --warning: #FFD54F;
+  --warning-tint: rgba(255, 213, 79, 0.12);
+  --info: #64B5F6;
+  --stellar-color: #CCCCCC;
+  --ethereum-color: #8BA0FF;
+  --solana-color: #B07FFF;
 }
 
 * {
@@ -40,11 +63,12 @@ html, body, #root {
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--white);
-  color: var(--black);
+  background: var(--bg);
+  color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 code, .mono {
@@ -57,7 +81,7 @@ a {
 }
 
 a:hover {
-  color: var(--green-light);
+  color: var(--green-hover);
 }
 
 /* Scrollbar */
@@ -72,7 +96,7 @@ a:hover {
   border-radius: 3px;
 }
 
-/* Animations */
+/* ========= Animations ========= */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -87,6 +111,74 @@ a:hover {
   to { transform: rotate(360deg); }
 }
 
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .fade-in {
   animation: fadeIn 0.3s ease-out;
+}
+
+/* ========= Mobile Responsive ========= */
+.nav-desktop { display: flex; }
+.nav-mobile-trigger { display: none !important; }
+.nav-mobile-menu { display: none; }
+.nav-user-desktop { display: flex; }
+
+@media (max-width: 768px) {
+  .nav-desktop { display: none !important; }
+  .nav-mobile-trigger { display: flex !important; }
+  .nav-user-desktop { display: none !important; }
+
+  .nav-mobile-menu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 8px;
+    z-index: 49;
+    box-shadow: var(--shadow-md);
+  }
+
+  .nav-mobile-menu button {
+    min-height: 48px;
+    width: 100%;
+    text-align: left;
+    padding: 12px 20px !important;
+    font-size: 15px !important;
+  }
+}
+
+/* ========= Focus Visible ========= */
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+button:focus:not(:focus-visible),
+input:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ========= Skip to Content (A11y) ========= */
+.skip-to-content {
+  position: absolute;
+  left: -9999px;
+  z-index: 999;
+  padding: 8px 16px;
+  background: var(--green);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+.skip-to-content:focus {
+  left: 0;
+  top: 0;
 }

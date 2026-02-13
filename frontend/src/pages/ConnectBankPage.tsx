@@ -174,7 +174,7 @@ export function ConnectBankPage() {
             <Button
               variant="secondary"
               size="md"
-              onClick={() => navigate('/send')}
+              onClick={() => navigate('/dashboard')}
               style={{ width: 'auto', flex: '0 0 auto', padding: '12px 24px' }}
             >
               Dashboard

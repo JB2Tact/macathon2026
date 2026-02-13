@@ -3,9 +3,11 @@ interface SpinnerProps {
   color?: string;
 }
 
-export function Spinner({ size = 24, color = '#00C853' }: SpinnerProps) {
+export function Spinner({ size = 24, color = 'var(--green)' }: SpinnerProps) {
   return (
     <div
+      role="status"
+      aria-label="Loading"
       style={{
         width: size,
         height: size,
@@ -21,17 +23,19 @@ export function Spinner({ size = 24, color = '#00C853' }: SpinnerProps) {
 export function FullPageSpinner() {
   return (
     <div
+      role="status"
+      aria-live="polite"
       style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         height: '100vh',
-        background: '#F5F5F5',
+        background: 'var(--bg)',
       }}
     >
       <div style={{ textAlign: 'center' }}>
         <Spinner size={40} />
-        <p style={{ marginTop: '16px', color: '#666666', fontSize: '14px' }}>Loading...</p>
+        <p style={{ marginTop: '16px', color: 'var(--text-secondary)', fontSize: '14px' }}>Loading...</p>
       </div>
     </div>
   );

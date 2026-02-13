@@ -19,6 +19,7 @@ export interface ParsedInput {
   parsedCurrency: string;
   parsedRecipient: string;
   parsedCountry?: string;
+  parsedWalletAddress?: string;
 }
 
 export interface Route {

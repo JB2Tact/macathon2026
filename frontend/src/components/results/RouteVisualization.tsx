@@ -8,8 +8,8 @@ const nodeStyle: React.CSSProperties = {
   width: '48px',
   height: '48px',
   borderRadius: '50%',
-  border: '2px solid #00C853',
-  background: '#FFFFFF',
+  border: '2px solid var(--green)',
+  background: 'var(--surface)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -20,7 +20,7 @@ const nodeStyle: React.CSSProperties = {
 const labelStyle: React.CSSProperties = {
   fontSize: '13px',
   fontWeight: 500,
-  color: '#666666',
+  color: 'var(--text-secondary)',
   marginTop: '8px',
 };
 
@@ -44,7 +44,7 @@ export function RouteVisualization({ blockchain }: RouteVisualizationProps) {
           left: 0,
           width: '100%',
           height: '4px',
-          background: '#E0E0E0',
+          background: 'var(--border)',
           transform: 'translateY(-50%)',
           borderRadius: '4px',
         }}
@@ -57,7 +57,7 @@ export function RouteVisualization({ blockchain }: RouteVisualizationProps) {
           top: '50%',
           left: 0,
           height: '4px',
-          background: '#00C853',
+          background: 'var(--green)',
           transform: 'translateY(-50%)',
           borderRadius: '4px',
         }}
@@ -83,7 +83,7 @@ export function RouteVisualization({ blockchain }: RouteVisualizationProps) {
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
         >
           <div style={nodeStyle}>
-            <span style={{ color: '#00C853' }}>&#9788;</span>
+            <span style={{ color: 'var(--green)' }}>&#9788;</span>
           </div>
           <span style={labelStyle}>You</span>
         </motion.div>
@@ -100,8 +100,8 @@ export function RouteVisualization({ blockchain }: RouteVisualizationProps) {
               width: '64px',
               height: '64px',
               borderRadius: '16px',
-              border: '2px solid #00C853',
-              background: '#FFFFFF',
+              border: '2px solid var(--green)',
+              background: 'var(--surface)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -109,7 +109,7 @@ export function RouteVisualization({ blockchain }: RouteVisualizationProps) {
               boxShadow: '0 0 24px rgba(0,200,83,0.2)',
               fontSize: '24px',
               fontWeight: 700,
-              color: '#0A0A0A',
+              color: 'var(--text)',
             }}
           >
             {chainIcon}
@@ -118,7 +118,7 @@ export function RouteVisualization({ blockchain }: RouteVisualizationProps) {
             style={{
               fontSize: '13px',
               fontWeight: 500,
-              color: '#00C853',
+              color: 'var(--green)',
               marginTop: '8px',
               textTransform: 'capitalize',
             }}
@@ -135,7 +135,7 @@ export function RouteVisualization({ blockchain }: RouteVisualizationProps) {
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
         >
           <div style={nodeStyle}>
-            <span style={{ color: '#00C853' }}>&#127760;</span>
+            <span style={{ color: 'var(--green)' }}>&#127760;</span>
           </div>
           <span style={labelStyle}>Recipient</span>
         </motion.div>

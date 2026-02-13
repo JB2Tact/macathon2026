@@ -10,33 +10,34 @@ interface CardProps {
 
 export function Card({ children, style, glass, onClick, hoverable }: CardProps) {
   const base: CSSProperties = {
-    background: glass
-      ? 'rgba(255, 255, 255, 0.7)'
-      : '#FFFFFF',
+    background: glass ? 'var(--surface-glass)' : 'var(--surface)',
     backdropFilter: glass ? 'blur(20px)' : undefined,
     WebkitBackdropFilter: glass ? 'blur(20px)' : undefined,
     borderRadius: '16px',
-    border: '1px solid rgba(224, 224, 224, 0.5)',
+    border: '1px solid var(--border)',
     padding: '24px',
     transition: 'all 0.2s ease',
     cursor: onClick || hoverable ? 'pointer' : undefined,
-    boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+    boxShadow: 'var(--shadow-sm)',
   };
 
   return (
     <div
       style={{ ...base, ...style }}
       onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
       onMouseEnter={(e) => {
         if (hoverable || onClick) {
           (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
-          (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 30px rgba(0,0,0,0.08)';
+          (e.currentTarget as HTMLDivElement).style.boxShadow = 'var(--shadow-lg)';
         }
       }}
       onMouseLeave={(e) => {
         if (hoverable || onClick) {
           (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
-          (e.currentTarget as HTMLDivElement).style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)';
+          (e.currentTarget as HTMLDivElement).style.boxShadow = 'var(--shadow-sm)';
         }
       }}
     >

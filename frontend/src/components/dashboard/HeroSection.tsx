@@ -16,14 +16,14 @@ export function HeroSection({ onSendMoney, onViewHistory }: HeroSectionProps) {
         style={{
           fontSize: '40px',
           fontWeight: 700,
-          color: '#0A0A0A',
+          color: 'var(--text)',
           lineHeight: 1.2,
           marginBottom: '16px',
         }}
       >
         Send money globally,
         <br />
-        <span style={{ color: '#00C853' }}>instantly & intelligently.</span>
+        <span style={{ color: 'var(--green)' }}>instantly & intelligently.</span>
       </motion.h1>
 
       <motion.p
@@ -32,7 +32,7 @@ export function HeroSection({ onSendMoney, onViewHistory }: HeroSectionProps) {
         transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         style={{
           fontSize: '17px',
-          color: '#666666',
+          color: 'var(--text-secondary)',
           maxWidth: '520px',
           margin: '0 auto 32px',
           lineHeight: 1.6,

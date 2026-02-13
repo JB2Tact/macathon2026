@@ -1,18 +1,24 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { PageTransition } from './components/common/PageTransition';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { FullPageSpinner } from './components/common/Spinner';
-import { LoginPage } from './pages/LoginPage';
-import { SignupPage } from './pages/SignupPage';
-import { SendPage } from './pages/SendPage';
-import { ResultsPage } from './pages/ResultsPage';
-import { HistoryPage } from './pages/HistoryPage';
-import { ConnectBankPage } from './pages/ConnectBankPage';
-import { DashboardPage } from './pages/DashboardPage';
-import { ContactsPage } from './pages/ContactsPage';
 import type { ReactNode } from 'react';
+
+// Lazy-loaded pages for code splitting
+const LoginPage = lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })));
+const SignupPage = lazy(() => import('./pages/SignupPage').then(m => ({ default: m.SignupPage })));
+const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
+const SendPage = lazy(() => import('./pages/SendPage').then(m => ({ default: m.SendPage })));
+const ResultsPage = lazy(() => import('./pages/ResultsPage').then(m => ({ default: m.ResultsPage })));
+const HistoryPage = lazy(() => import('./pages/HistoryPage').then(m => ({ default: m.HistoryPage })));
+const ConnectBankPage = lazy(() => import('./pages/ConnectBankPage').then(m => ({ default: m.ConnectBankPage })));
+const ContactsPage = lazy(() => import('./pages/ContactsPage').then(m => ({ default: m.ContactsPage })));
+const MarketPage = lazy(() => import('./pages/MarketPage').then(m => ({ default: m.MarketPage })));
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const { firebaseUser, loading } = useAuth();
@@ -36,12 +42,13 @@ function AppRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/login" element={<PublicRoute><PageTransition><LoginPage /></PageTransition></PublicRoute>} />
         <Route path="/signup" element={<PublicRoute><PageTransition><SignupPage /></PageTransition></PublicRoute>} />
-        <Route path="/dashboard" element={<ProtectedRoute><PageTransition><DashboardPage /></PageTransition></ProtectedRoute>} />
-        <Route path="/send" element={<ProtectedRoute><PageTransition><SendPage /></PageTransition></ProtectedRoute>} />
-        <Route path="/results" element={<ProtectedRoute><PageTransition><ResultsPage /></PageTransition></ProtectedRoute>} />
-        <Route path="/history" element={<ProtectedRoute><PageTransition><HistoryPage /></PageTransition></ProtectedRoute>} />
-        <Route path="/connect-bank" element={<ProtectedRoute><PageTransition><ConnectBankPage /></PageTransition></ProtectedRoute>} />
-        <Route path="/contacts" element={<ProtectedRoute><PageTransition><ContactsPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><ErrorBoundary><PageTransition><DashboardPage /></PageTransition></ErrorBoundary></ProtectedRoute>} />
+        <Route path="/send" element={<ProtectedRoute><ErrorBoundary><PageTransition><SendPage /></PageTransition></ErrorBoundary></ProtectedRoute>} />
+        <Route path="/results" element={<ProtectedRoute><ErrorBoundary><PageTransition><ResultsPage /></PageTransition></ErrorBoundary></ProtectedRoute>} />
+        <Route path="/history" element={<ProtectedRoute><ErrorBoundary><PageTransition><HistoryPage /></PageTransition></ErrorBoundary></ProtectedRoute>} />
+        <Route path="/connect-bank" element={<ProtectedRoute><ErrorBoundary><PageTransition><ConnectBankPage /></PageTransition></ErrorBoundary></ProtectedRoute>} />
+        <Route path="/contacts" element={<ProtectedRoute><ErrorBoundary><PageTransition><ContactsPage /></PageTransition></ErrorBoundary></ProtectedRoute>} />
+        <Route path="/market" element={<ProtectedRoute><ErrorBoundary><PageTransition><MarketPage /></PageTransition></ErrorBoundary></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </AnimatePresence>
@@ -51,21 +58,26 @@ function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <AppRoutes />
-        <Toaster
-          position="bottom-right"
-          toastOptions={{
-            style: {
-              borderRadius: '10px',
-              background: '#0A0A0A',
-              color: '#FFFFFF',
-              fontSize: '14px',
-              fontFamily: 'Inter, sans-serif',
-            },
-          }}
-        />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <Suspense fallback={<FullPageSpinner />}>
+            <AppRoutes />
+          </Suspense>
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                borderRadius: '10px',
+                background: 'var(--surface)',
+                color: 'var(--text)',
+                fontSize: '14px',
+                fontFamily: 'Inter, sans-serif',
+                border: '1px solid var(--border)',
+              },
+            }}
+          />
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

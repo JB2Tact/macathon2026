@@ -11,9 +11,9 @@ interface RouteCardProps {
 }
 
 const chainMeta: Record<Blockchain, { name: string; icon: string; color: string }> = {
-  stellar: { name: 'Stellar', icon: '★', color: '#000000' },
-  ethereum: { name: 'Ethereum', icon: '◆', color: '#627EEA' },
-  solana: { name: 'Solana', icon: '◎', color: '#9945FF' },
+  stellar: { name: 'Stellar', icon: '★', color: 'var(--stellar-color)' },
+  ethereum: { name: 'Ethereum', icon: '◆', color: 'var(--ethereum-color)' },
+  solana: { name: 'Solana', icon: '◎', color: 'var(--solana-color)' },
 };
 
 export function RouteCard({ route, recommended, onSelect, loading }: RouteCardProps) {
@@ -24,7 +24,7 @@ export function RouteCard({ route, recommended, onSelect, loading }: RouteCardPr
       hoverable
       style={{
         position: 'relative',
-        border: recommended ? '2px solid #00C853' : '1px solid #E0E0E0',
+        border: recommended ? '2px solid var(--green)' : '1px solid var(--border)',
         overflow: 'hidden',
       }}
     >
@@ -34,7 +34,7 @@ export function RouteCard({ route, recommended, onSelect, loading }: RouteCardPr
             position: 'absolute',
             top: '12px',
             right: '12px',
-            background: '#00C853',
+            background: 'var(--green)',
             color: '#FFFFFF',
             padding: '4px 10px',
             borderRadius: '12px',
@@ -53,7 +53,7 @@ export function RouteCard({ route, recommended, onSelect, loading }: RouteCardPr
             width: '44px',
             height: '44px',
             borderRadius: '12px',
-            background: `${meta.color}15`,
+            background: 'var(--green-tint)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -63,21 +63,21 @@ export function RouteCard({ route, recommended, onSelect, loading }: RouteCardPr
           {meta.icon}
         </div>
         <div>
-          <h3 style={{ fontSize: '17px', fontWeight: 600, color: '#0A0A0A' }}>{meta.name}</h3>
-          <p style={{ fontSize: '13px', color: '#666666' }}>{route.blockchain} testnet</p>
+          <h3 style={{ fontSize: '17px', fontWeight: 600, color: 'var(--text)' }}>{meta.name}</h3>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{route.blockchain} testnet</p>
         </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
         <div>
-          <p style={{ fontSize: '12px', color: '#999999', marginBottom: '4px' }}>Estimated Fee</p>
-          <p style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace', color: '#0A0A0A' }}>
+          <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>Estimated Fee</p>
+          <p style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace', color: 'var(--text)' }}>
             <AnimatedCounter value={route.estimatedFee} prefix="$" decimals={4} />
           </p>
         </div>
         <div>
-          <p style={{ fontSize: '12px', color: '#999999', marginBottom: '4px' }}>Est. Time</p>
-          <p style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace', color: '#0A0A0A' }}>
+          <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>Est. Time</p>
+          <p style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace', color: 'var(--text)' }}>
             {route.estimatedTime}
           </p>
         </div>

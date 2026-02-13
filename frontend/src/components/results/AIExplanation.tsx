@@ -13,7 +13,7 @@ export function AIExplanation({ explanation }: AIExplanationProps) {
     <Card
       glass
       style={{
-        borderLeft: '4px solid #00C853',
+        borderLeft: '4px solid var(--green)',
         marginTop: '24px',
         overflow: 'hidden',
       }}
@@ -33,7 +33,7 @@ export function AIExplanation({ explanation }: AIExplanationProps) {
           <span
             style={{
               fontWeight: 700,
-              color: '#00C853',
+              color: 'var(--green)',
               fontSize: '14px',
             }}
           >
@@ -44,15 +44,15 @@ export function AIExplanation({ explanation }: AIExplanationProps) {
               fontSize: '10px',
               fontWeight: 700,
               padding: '2px 8px',
-              background: '#00C85315',
-              color: '#00C853',
+              background: 'var(--green-tint)',
+              color: 'var(--green)',
               borderRadius: '10px',
             }}
           >
             GEMINI
           </span>
         </div>
-        <span style={{ fontSize: '14px', color: '#666666' }}>
+        <span style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
           {isExpanded ? '\u25B2' : '\u25BC'}
         </span>
       </div>
@@ -68,7 +68,7 @@ export function AIExplanation({ explanation }: AIExplanationProps) {
             <p
               style={{
                 fontSize: '14px',
-                color: '#333333',
+                color: 'var(--text)',
                 lineHeight: 1.6,
                 whiteSpace: 'pre-wrap',
                 margin: 0,

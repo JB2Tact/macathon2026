@@ -5,31 +5,51 @@ import type { Transaction } from '../types';
 export function useTransactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
 
   const fetch = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await getTransactions();
-      setTransactions(data);
+      const result = await getTransactions();
+      setTransactions(result.transactions);
+      setNextCursor(result.nextCursor);
     } catch (err) {
-      // Silently handle network errors - show empty state instead of error
-      console.warn('Failed to load transactions:', err);
+      const msg = err instanceof Error ? err.message : 'Failed to load transactions';
+      setError(msg);
       setTransactions([]);
-      // Only show error for non-network issues
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load';
-      if (!errorMessage.includes('Network') && !errorMessage.includes('connect')) {
-        setError(errorMessage);
-      }
     } finally {
       setLoading(false);
     }
   }, []);
 
+  const loadMore = useCallback(async () => {
+    if (!nextCursor || loadingMore) return;
+    try {
+      setLoadingMore(true);
+      const result = await getTransactions(nextCursor);
+      setTransactions(prev => [...prev, ...result.transactions]);
+      setNextCursor(result.nextCursor);
+    } catch {
+      // Non-fatal — user can retry
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [nextCursor, loadingMore]);
+
   useEffect(() => {
     fetch();
   }, [fetch]);
 
-  return { transactions, loading, error, refetch: fetch };
+  return {
+    transactions,
+    loading,
+    loadingMore,
+    error,
+    refetch: fetch,
+    loadMore,
+    hasMore: nextCursor !== null,
+  };
 }

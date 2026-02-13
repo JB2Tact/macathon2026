@@ -13,7 +13,7 @@ export function TrustIndicators() {
       style={{
         marginTop: '48px',
         padding: '32px 0',
-        borderTop: '1px solid #E0E0E0',
+        borderTop: '1px solid var(--border)',
       }}
     >
       <div
@@ -39,7 +39,7 @@ export function TrustIndicators() {
                   width: '44px',
                   height: '44px',
                   borderRadius: '12px',
-                  background: '#F5F5F5',
+                  background: 'var(--bg)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -49,10 +49,10 @@ export function TrustIndicators() {
                 {item.icon}
               </div>
               <div>
-                <h4 style={{ fontSize: '14px', fontWeight: 600, color: '#0A0A0A' }}>
+                <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text)' }}>
                   {item.title}
                 </h4>
-                <p style={{ fontSize: '12px', color: '#999999' }}>{item.desc}</p>
+                <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{item.desc}</p>
               </div>
             </div>
           </FadeInWhenVisible>

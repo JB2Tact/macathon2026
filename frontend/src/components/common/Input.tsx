@@ -14,7 +14,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             style={{
               fontSize: '13px',
               fontWeight: 500,
-              color: '#333333',
+              color: 'var(--text)',
             }}
           >
             {label}
@@ -25,28 +25,28 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           style={{
             padding: '12px 16px',
             borderRadius: '10px',
-            border: `1.5px solid ${error ? '#FF5252' : '#E0E0E0'}`,
+            border: `1.5px solid ${error ? 'var(--error)' : 'var(--border)'}`,
             fontSize: '15px',
             fontFamily: 'Inter, sans-serif',
             outline: 'none',
             transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-            background: '#FFFFFF',
-            color: '#0A0A0A',
+            background: 'var(--surface)',
+            color: 'var(--text)',
             width: '100%',
             ...style,
           }}
           onFocus={(e) => {
-            e.target.style.borderColor = '#00C853';
+            e.target.style.borderColor = 'var(--green)';
             e.target.style.boxShadow = '0 0 0 3px rgba(0,200,83,0.1)';
           }}
           onBlur={(e) => {
-            e.target.style.borderColor = error ? '#FF5252' : '#E0E0E0';
+            e.target.style.borderColor = error ? 'var(--error)' : 'var(--border)';
             e.target.style.boxShadow = 'none';
           }}
           {...props}
         />
         {error && (
-          <span style={{ fontSize: '12px', color: '#FF5252' }}>{error}</span>
+          <span role="alert" style={{ fontSize: '12px', color: 'var(--error)' }}>{error}</span>
         )}
       </div>
     );
